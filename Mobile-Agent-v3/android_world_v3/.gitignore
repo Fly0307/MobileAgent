@@ -23,3 +23,7 @@ poetry.lock
 
 # PyCharm
 .idea
+
+log_ma3_2025*
+traj_2025*
+merged_results/

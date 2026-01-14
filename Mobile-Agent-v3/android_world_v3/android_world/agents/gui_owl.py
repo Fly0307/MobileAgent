@@ -16,17 +16,19 @@
 from android_world.agents import base_agent
 from android_world.agents import seeact_utils
 from android_world.agents import mobile_agent_utils_new as mobile_agent_utils
+from android_world.agents import experience_utils
 from android_world.env import actuation
 from android_world.env import interface
 from android_world.env import adb_utils
 from android_world.env import tools
 from android_world.agents import new_json_action as json_action
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 import base64
 import json
 import pprint
 import os
 import time
+import copy
 from qwen_vl_utils import smart_resize
 from io import BytesIO
 
@@ -141,10 +143,243 @@ def fetch_resized_image(screenshot_file):
     screenshot = screenshot.resize((resized_width, resized_height))
     return screenshot, resized_width, resized_height, current_image_ele
 
+def visualize_action_on_screenshot(screenshot_image, action_obj, current_image_ele):
+    """在截图上可视化标记动作。
+    
+    Args:
+        screenshot_image: PIL Image 对象
+        action_obj: 包含动作信息的对象（JSONAction 对象、字典或嵌套字典）
+        current_image_ele: 坐标映射信息
+    
+    Returns:
+        标记后的 PIL Image 对象
+    """
+    try:
+        # 如果 action_obj 为 None，直接返回原图
+        if action_obj is None:
+            print("[VISUALIZATION] action_obj 为 None，返回原始截图", flush=True)
+            return screenshot_image
+        
+        # 将各种格式的动作对象转换为标准字典
+        action_dict = None
+        if hasattr(action_obj, '__dataclass_fields__'):
+            # 这是一个 dataclass 对象（JSONAction）
+            action_dict = {k: v for k, v in action_obj.__dict__.items() if v is not None}
+            print(f"[VISUALIZATION] 从 JSONAction 对象转换得到的字典: {action_dict}", flush=True)
+        elif isinstance(action_obj, dict):
+            # 检查是否是嵌套结构 {"name": "mobile_use", "arguments": {...}}
+            if 'arguments' in action_obj and isinstance(action_obj['arguments'], dict):
+                # 提取 arguments 内的内容
+                action_dict = action_obj['arguments'].copy()
+                print(f"[VISUALIZATION] 从嵌套字典的 arguments 字段提取: {action_dict}", flush=True)
+            else:
+                action_dict = action_obj
+                print(f"[VISUALIZATION] 使用传入的字典: {action_dict}", flush=True)
+        else:
+            print(f"[VISUALIZATION] 未知的动作对象类型: {type(action_obj)}", flush=True)
+            return screenshot_image
+        
+        if not action_dict:
+            print("[VISUALIZATION] 动作字典为空，返回原始截图", flush=True)
+            return screenshot_image
+        
+        # 创建副本以避免修改原图
+        marked_screenshot = screenshot_image.copy()
+        draw = ImageDraw.Draw(marked_screenshot)
+        
+        # 尝试获取字体（如果失败则使用默认字体）
+        try:
+            font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 20)
+            font_small = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16)
+        except:
+            font = ImageFont.load_default()
+            font_small = ImageFont.load_default()
+        
+        # 获取动作类型，支持多种字段名
+        action_type = action_dict.get('action_type') or action_dict.get('action', '')
+        print(f"[VISUALIZATION] 处理动作类型: {action_type}", flush=True)
+        
+        # 点击动作
+        if action_type == 'click':
+            # 支持 coordinate、x/y、position 等多种坐标格式
+            x, y = None, None
+            if 'coordinate' in action_dict and isinstance(action_dict['coordinate'], (list, tuple)) and len(action_dict['coordinate']) >= 2:
+                x, y = action_dict['coordinate'][0], action_dict['coordinate'][1]
+            else:
+                x = action_dict.get('x')
+                y = action_dict.get('y')
+            
+            if x is not None and y is not None:
+                x, y = int(x), int(y)
+                # 绘制十字标记（红色）
+                circle_radius = 20
+                draw.ellipse([x - circle_radius, y - circle_radius, x + circle_radius, y + circle_radius], 
+                           outline='red', width=3)
+                draw.line([(x - 30, y), (x + 30, y)], fill='red', width=3)
+                draw.line([(x, y - 30), (x, y + 30)], fill='red', width=3)
+                # 添加文字标签
+                draw.text((x + 35, y - 15), f"Click({x}, {y})", fill='red', font=font_small)
+                print(f"[VISUALIZATION] 标记点击: ({x}, {y})", flush=True)
+            else:
+                print(f"[VISUALIZATION] 点击动作缺少坐标信息: {action_dict}", flush=True)
+        
+        # 长按动作
+        elif action_type == 'long_press':
+            x, y = None, None
+            if 'coordinate' in action_dict and isinstance(action_dict['coordinate'], (list, tuple)) and len(action_dict['coordinate']) >= 2:
+                x, y = action_dict['coordinate'][0], action_dict['coordinate'][1]
+            else:
+                x = action_dict.get('x')
+                y = action_dict.get('y')
+            
+            if x is not None and y is not None:
+                x, y = int(x), int(y)
+                # 绘制方形框（橙色）
+                rect_size = 25
+                draw.rectangle([x - rect_size, y - rect_size, x + rect_size, y + rect_size], 
+                             outline='orange', width=3)
+                draw.line([(x - 35, y), (x + 35, y)], fill='orange', width=2)
+                draw.line([(x, y - 35), (x, y + 35)], fill='orange', width=2)
+                draw.text((x + 40, y - 15), f"LongPress({x}, {y})", fill='orange', font=font_small)
+                print(f"[VISUALIZATION] 标记长按: ({x}, {y})", flush=True)
+        
+        # 输入文本动作
+        elif action_type == 'input_text':
+            text = action_dict.get('text', '')
+            x, y = None, None
+            if 'coordinate' in action_dict and isinstance(action_dict['coordinate'], (list, tuple)) and len(action_dict['coordinate']) >= 2:
+                x, y = action_dict['coordinate'][0], action_dict['coordinate'][1]
+            else:
+                x = action_dict.get('x')
+                y = action_dict.get('y')
+            
+            if x is not None and y is not None:
+                x, y = int(x), int(y)
+                # 绘制圆形标记（绿色）
+                circle_radius = 15
+                draw.ellipse([x - circle_radius, y - circle_radius, x + circle_radius, y + circle_radius], 
+                           outline='green', width=2)
+                # 添加输入内容标签
+                label_text = f"Input: {text[:20]}" if len(str(text)) > 20 else f"Input: {text}"
+                draw.text((x + 25, y - 20), label_text, fill='green', font=font_small)
+                print(f"[VISUALIZATION] 标记输入: {label_text}", flush=True)
+        
+        # 滚动动作
+        elif action_type == 'scroll':
+            direction = action_dict.get('direction', '')
+            # 在屏幕顶部显示滚动方向
+            scroll_text = f"Scroll: {direction.upper()}" if direction else "Scroll"
+            draw.text((20, 20), scroll_text, fill='blue', font=font)
+            
+            # 根据方向绘制箭头提示
+            if direction and direction.lower() == 'up':
+                arrow_x, arrow_y = marked_screenshot.width // 2, 100
+                draw.polygon([(arrow_x, arrow_y), (arrow_x - 20, arrow_y + 40), (arrow_x + 20, arrow_y + 40)], 
+                           fill='blue', outline='blue')
+            elif direction and direction.lower() == 'down':
+                arrow_x, arrow_y = marked_screenshot.width // 2, marked_screenshot.height - 100
+                draw.polygon([(arrow_x, arrow_y), (arrow_x - 20, arrow_y - 40), (arrow_x + 20, arrow_y - 40)], 
+                           fill='blue', outline='blue')
+            elif direction and direction.lower() == 'left':
+                arrow_x, arrow_y = 50, marked_screenshot.height // 2
+                draw.polygon([(arrow_x, arrow_y), (arrow_x + 40, arrow_y - 20), (arrow_x + 40, arrow_y + 20)], 
+                           fill='blue', outline='blue')
+            elif direction and direction.lower() == 'right':
+                arrow_x, arrow_y = marked_screenshot.width - 50, marked_screenshot.height // 2
+                draw.polygon([(arrow_x, arrow_y), (arrow_x - 40, arrow_y - 20), (arrow_x - 40, arrow_y + 20)], 
+                           fill='blue', outline='blue')
+            print(f"[VISUALIZATION] 标记滚动: {direction}", flush=True)
+        
+        # 滑动/拖拽动作
+        elif action_type == 'swipe':
+            start_x, start_y, end_x, end_y = None, None, None, None
+            
+            # 支持多种坐标格式
+            # 格式1: coordinate 和 coordinate2
+            if 'coordinate' in action_dict and 'coordinate2' in action_dict:
+                if isinstance(action_dict['coordinate'], (list, tuple)) and len(action_dict['coordinate']) >= 2:
+                    start_x, start_y = action_dict['coordinate'][0], action_dict['coordinate'][1]
+                if isinstance(action_dict['coordinate2'], (list, tuple)) and len(action_dict['coordinate2']) >= 2:
+                    end_x, end_y = action_dict['coordinate2'][0], action_dict['coordinate2'][1]
+            # 格式2: start_x, start_y, end_x, end_y
+            else:
+                start_x = action_dict.get('start_x')
+                start_y = action_dict.get('start_y')
+                end_x = action_dict.get('end_x')
+                end_y = action_dict.get('end_y')
+            
+            if all(v is not None for v in [start_x, start_y, end_x, end_y]):
+                start_x, start_y, end_x, end_y = int(start_x), int(start_y), int(end_x), int(end_y)
+                # 绘制起点
+                draw.ellipse([start_x - 15, start_y - 15, start_x + 15, start_y + 15], 
+                           outline='purple', width=3)
+                draw.text((start_x + 20, start_y - 15), "Start", fill='purple', font=font_small)
+                # 绘制箭头线
+                draw.line([(start_x, start_y), (end_x, end_y)], fill='purple', width=3)
+                # 绘制终点
+                draw.ellipse([end_x - 15, end_y - 15, end_x + 15, end_y + 15], 
+                           fill='purple', outline='purple', width=3)
+                draw.text((end_x + 20, end_y - 15), "End", fill='purple', font=font_small)
+                print(f"[VISUALIZATION] 标记滑动: ({start_x}, {start_y}) -> ({end_x}, {end_y})", flush=True)
+            else:
+                print(f"[VISUALIZATION] 滑动动作缺少坐标信息: {action_dict}", flush=True)
+        
+        # 打开应用动作
+        elif action_type == 'open_app':
+            app_name = action_dict.get('app_name', '')
+            draw.text((20, 50), f"Open App: {app_name}", fill='darkgreen', font=font)
+            print(f"[VISUALIZATION] 标记打开应用: {app_name}", flush=True)
+        
+        # 导航动作
+        elif action_type == 'navigate_back':
+            draw.text((20, 50), "Navigate: BACK", fill='darkred', font=font)
+            print(f"[VISUALIZATION] 标记返回导航", flush=True)
+        
+        elif action_type == 'navigate_home':
+            draw.text((20, 50), "Navigate: HOME", fill='darkred', font=font)
+            print(f"[VISUALIZATION] 标记主页导航", flush=True)
+        
+        # 状态动作
+        elif action_type == 'status':
+            status = action_dict.get('goal_status', '')
+            draw.text((20, 50), f"Status: {status.upper()}", fill='black', font=font)
+            print(f"[VISUALIZATION] 标记状态: {status}", flush=True)
+        
+        # 答案动作
+        elif action_type == 'answer':
+            text = action_dict.get('text', '')
+            answer_text = f"Answer: {text[:40]}" if len(str(text)) > 40 else f"Answer: {text}"
+            draw.text((20, 50), answer_text, fill='brown', font=font_small)
+            print(f"[VISUALIZATION] 标记答案: {answer_text}", flush=True)
+        
+        # 未处理的动作类型
+        else:
+            print(f"[VISUALIZATION] 未处理的动作类型: {action_type}，动作字典: {action_dict}", flush=True)
+        
+        print(f"[VISUALIZATION] 成功标记动作，类型: {action_type}", flush=True)
+        return marked_screenshot
+    
+    except Exception as e:
+        print(f"[VISUALIZATION] 标记动作失败: {e}", flush=True)
+        import traceback
+        traceback.print_exc()
+        # 如果标记失败，返回原始截图
+        return screenshot_image
+
 class GUIOwl(base_agent.EnvironmentInteractingAgent):
   """mobile agent for Android."""
 
-  def __init__(self, env: interface.AsyncEnv, vllm, src_format, api_key, url, name: str = "Mobile_Agent", output_path = ""):
+  def __init__(
+      self,
+      env: interface.AsyncEnv,
+      vllm,
+      src_format,
+      api_key,
+      url,
+      name: str = "Mobile_Agent",
+      output_path="",
+      use_task_enhancement: bool = True,
+  ):
     super().__init__(env, name)
     self._actions = []
     self._screenshots = []
@@ -166,6 +401,13 @@ class GUIOwl(base_agent.EnvironmentInteractingAgent):
     self.output_list = []
     self._response = []
     self.task_name = {}
+    
+    # Task enhancement configuration and fields
+    self.use_task_enhancement = use_task_enhancement  # Configuration flag for task enhancement
+    self.enhanced_goal = None  # Cache for enhanced task description
+    self.original_goal = None  # Track original goal for detecting new tasks
+    self.actual_goal = None  # Actual goal used for planning
+    self.task_index = 0
 
   def reset(self, go_home: bool = False) -> None:
     super().reset(go_home)
@@ -176,6 +418,12 @@ class GUIOwl(base_agent.EnvironmentInteractingAgent):
     self._summarys.clear()
     self._thoughts.clear()
     self._response.clear()
+    
+    # Clear enhanced goal on reset
+    self.enhanced_goal = None
+    self.original_goal = None
+    self.actual_goal = None
+    self.task_index = self.task_index + 1
   
   def initialize_chrome(self):
     print("Running additional chrome initialization...")
@@ -219,6 +467,61 @@ class GUIOwl(base_agent.EnvironmentInteractingAgent):
   
   def step(
       self, goal: str) -> base_agent.AgentInteractionResult:
+    ## Handle task enhancement with experience retrieval ##
+    # If this is a new goal or goal has changed, try to enhance it with experience
+    if self.original_goal != goal:
+      self.original_goal = goal
+      
+      if self.use_task_enhancement:
+        try:
+          print(f"[EXPERIENCE] Original task: {goal}", flush=True)
+          
+          # Try to get task_name from the task_name dict (if available)
+          task_name = self.task_name.get(goal) if self.task_name else None
+          
+          if task_name:
+            # Use v2 interface for direct task_name matching (faster)
+            print(f"[EXPERIENCE] Found task_name: {task_name}, using enhance_task_with_experience_v2", flush=True)
+            enhanced = experience_utils.enhance_task_with_experience_v2(
+                original_task=goal,
+                task_name=task_name,
+                use_planner=True
+            )
+          else:
+            # Fall back to RAG-based approach if no task_name is available
+            print(f"[EXPERIENCE] No task_name found, using enhance_task_with_experience (RAG-based)", flush=True)
+            enhanced = experience_utils.enhance_task_with_experience(goal)
+          
+          if enhanced and enhanced != goal:
+            print(f"[EXPERIENCE] Task enhanced: {enhanced}", flush=True)
+            self.enhanced_goal = enhanced
+          else:
+            print(f"[EXPERIENCE] No relevant experience found, using original task", flush=True)
+            self.enhanced_goal = goal
+        except Exception as e:
+          print(f"[EXPERIENCE] Task enhancement failed: {e}, using original task", flush=True)
+          import traceback
+          traceback.print_exc()
+          self.enhanced_goal = goal
+      else:
+        print(f"[EXPERIENCE] Task enhancement is disabled, using original task", flush=True)
+        self.enhanced_goal = goal
+      
+      # Save task description and enhancement info
+      if self.output_path:
+        self._save_task_description(goal)
+    
+    # Use enhanced goal in planning phase
+    if self.actual_goal is None:
+      # Combine original goal with enhanced goal for planning
+      if self.enhanced_goal != goal:
+        self.actual_goal = f"Global goal is: {goal}\nYou can refer to the detailed experiences to help you complete the Global goal: {self.enhanced_goal}"
+      else:
+        self.actual_goal = goal
+
+    actual_goal = self.actual_goal
+    print(f"[TASK] Using task for planning: {actual_goal}", flush=True)
+    
     result = {
         "ui_elements": None,
         "screenshot": None,
@@ -243,7 +546,7 @@ class GUIOwl(base_agent.EnvironmentInteractingAgent):
       if goal not in self.task_name:
         task_output_dir = os.path.join(self.output_path, goal.replace(" ", "_")[:50])
       else:
-        task_output_dir = os.path.join(self.output_path, self.task_name[goal])
+        task_output_dir = os.path.join(self.output_path, self.task_name[goal], f"{self.task_index}")
       screenshot_file = os.path.join(task_output_dir, f"screenshot_{step_idx}.png")
       if not os.path.exists(task_output_dir):
         os.mkdir(task_output_dir)
@@ -258,7 +561,7 @@ class GUIOwl(base_agent.EnvironmentInteractingAgent):
     for idx, his in enumerate(self._summarys):
         if his is not None:
             stage2_history += 'Step ' + str(idx + 1) + ': ' + str(his.replace('\n', '').replace('"', '')) + '; '
-    stage2_user_prompt = goal
+    stage2_user_prompt = actual_goal  # Use enhanced goal for planning
 
     screenshot, resized_width, resized_height, current_image_ele = fetch_resized_image(screenshot_file)
     action_response = ''
@@ -290,6 +593,7 @@ class GUIOwl(base_agent.EnvironmentInteractingAgent):
     dummy_action = None
     thought = None
     summary = None
+    dummy_action_translated = None
     try:
       if self.add_thought:
         if '</think>' in action_response:
@@ -343,10 +647,23 @@ class GUIOwl(base_agent.EnvironmentInteractingAgent):
       if goal not in self.task_name:
         task_output_dir = os.path.join(self.output_path, goal.replace(" ", "_")[:50])
       else:
-        task_output_dir = os.path.join(self.output_path, self.task_name[goal])
+        task_output_dir = os.path.join(self.output_path, self.task_name[goal], f"{self.task_index}")
       if not os.path.exists(task_output_dir):
         os.mkdir(task_output_dir)
-      screenshot.save(screenshot_file)
+      
+      # 对截图进行动作标记可视化（在保存前进行标记）
+      try:
+        print(f"[VISUALIZATION] dummy_action_translated 类型: {type(dummy_action_translated)}", flush=True)
+        print(f"[VISUALIZATION] dummy_action_translated 内容: {dummy_action_translated}", flush=True)
+        marked_screenshot = visualize_action_on_screenshot(screenshot, dummy_action_translated, current_image_ele)
+        marked_screenshot.save(screenshot_file)
+        print(f"[VISUALIZATION] 已保存标记后的截图: {screenshot_file}", flush=True)
+      except Exception as e:
+        print(f"[VISUALIZATION] 标记失败，保存原始截图: {e}", flush=True)
+        import traceback
+        traceback.print_exc()
+        screenshot.save(screenshot_file)
+      
       with open(os.path.join(task_output_dir, "action.jsonl"), 'w', encoding='utf-8') as f:
         for item in self._actions:
             json_line = json.dumps(item, ensure_ascii=False)
@@ -356,3 +673,40 @@ class GUIOwl(base_agent.EnvironmentInteractingAgent):
         done=action.action_type == json_action.STATUS,
         data=result,
     )
+  
+  def _save_task_description(self, goal: str) -> None:
+    """Save original and enhanced task descriptions for reference.
+    
+    Args:
+      goal: The original task description
+    """
+    if not self.output_path:
+      return
+    
+    try:
+      # Get task output directory using goal (task type), not the enhanced instruction
+      if goal not in self.task_name:
+        task_dir_name = goal.replace(" ", "_")[:50]
+      else:
+        task_dir_name = self.task_name[goal]
+      
+      task_output_dir = os.path.join(self.output_path, task_dir_name)
+      if not os.path.exists(task_output_dir):
+        os.mkdir(task_output_dir)
+      
+      # Save task descriptions
+      task_info = {
+          "original_goal": goal,
+          "enhanced_goal": self.enhanced_goal,
+          "use_task_enhancement": self.use_task_enhancement
+      }
+      
+      task_info_file = os.path.join(task_output_dir, "task_description.json")
+      with open(task_info_file, 'w', encoding='utf-8') as f:
+        json.dump(task_info, f, ensure_ascii=False, indent=2)
+      
+      print(f"[TASK] Task descriptions saved to {task_info_file}", flush=True)
+      
+    except Exception as e:
+      print(f"[TASK] Failed to save task description: {e}", flush=True)
+

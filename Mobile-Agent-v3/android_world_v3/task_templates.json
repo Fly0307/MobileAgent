@@ -1,0 +1,1189 @@
+[
+  {
+    "task_name": "SimpleSmsSendClipboardContent",
+    "description": "Send a message to a specified phone number using the Simple SMS Messenger app by pasting the clipboard content into a new conversation.",
+    "full_experience": "1. Swipe up on the home screen to open the app drawer.\n2. Swipe up in the app drawer to locate the Simple SMS Messenger app if it is not visible.\n3. Tap on the Simple SMS Messenger app icon to open it.\n4. Tap the \"+\" button at the bottom right corner to start a new conversation.\n5. Enter the recipient's phone number in the input field.\n6. Tap the checkmark icon to confirm the phone number and initiate the conversation.\n7. Tap on the message input field to activate it.\n8. Long press on the message input field to bring up the options menu.\n9. Select the \"Paste\" option to insert the clipboard content into the message field.\n10. Tap the send button (typically located at the bottom right corner of the keyboard) to deliver the message.\n11. Confirm the message has been sent and terminate the task with success.",
+    "keywords": [
+      "SMS",
+      "clipboard",
+      "send"
+    ],
+    "task_template": "Send a message to {number} with the clipboard content in Simple SMS Messenger",
+    "difficulty": "easy",
+    "tags": [
+      "data_entry",
+      "parameterized"
+    ],
+    "optimal_steps": "6"
+  },
+  {
+    "task_name": "MarkorCreateNoteAndSms",
+    "description": "Create a new note in Markor with specified text, save it with a given filename, and send the note's content via SMS to a specified phone number using Simple SMS Messenger.",
+    "full_experience": "1. Open the app drawer by swiping up from the home screen.\n2. Locate and open the Markor app.\n3. Initiate the creation of a new note by tapping the option to create a new file.\n4. Enter the desired filename in the text field (e.g., {filename}).\n5. Confirm the creation of the note.\n6. Type the specified text content into the note (e.g., {text}).\n7. Save the note by navigating back to the home screen.\n8. Open the app drawer again and locate the Simple SMS Messenger app.\n9. Open the Simple SMS Messenger app.\n10. Start a new conversation by tapping the new message icon.\n11. Enter the recipient's phone number (e.g., {number}) in the input field.\n12. Confirm the phone number entry to initiate the message composition.\n13. Type the content of the note (e.g., {text}) into the message field.\n14. Send the SMS by tapping the send button.\n15. Verify that the message has been sent successfully.\n16. Terminate the process with a success status.",
+    "keywords": [
+      "Markor",
+      "SMS",
+      "note creation"
+    ],
+    "task_template": "Create a new note in Markor named {file_name} with the following text: {text}. Share the entire content of the note with the phone number {number} via SMS using Simple SMS Messenger",
+    "difficulty": "hard",
+    "tags": [
+      "multi_app",
+      "data_entry",
+      "parameterized"
+    ],
+    "optimal_steps": "9"
+  },
+  {
+    "task_name": "SimpleSmsReplyMostRecent",
+    "description": "Reply to the most recent text message using Simple SMS Messenger with a specified message.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Swipe through the app drawer to locate the Simple SMS Messenger app.\n3. Tap on the Simple SMS Messenger app icon to open it.\n4. In the message list, tap on the most recent conversation to open the chat window.\n5. Tap on the text input field at the bottom of the screen to activate the keyboard.\n6. Type the specified message into the text input field.\n7. Tap the send button (usually an arrow icon) to send the message.\n8. Confirm the task completion and terminate the process with a success status.",
+    "keywords": [
+      "reply",
+      "message",
+      "send"
+    ],
+    "task_template": "Reply to the most recent text message using Simple SMS Messenger with message: {message}",
+    "difficulty": "medium",
+    "tags": [
+      "parameterized"
+    ],
+    "optimal_steps": "5"
+  },
+  {
+    "task_name": "TurnOnWifiAndOpenApp",
+    "description": "Turn on Wi-Fi through the quick settings or settings menu, then open the Settings app to explore or manage device configurations.",
+    "full_experience": "1. Swipe down from the top of the screen to open the notification shade and quick settings menu.\n2. Tap on the 'Internet' option in the quick settings to access network settings.\n3. If Wi-Fi is off, tap the toggle switch next to 'Wi-Fi' to enable it.\n4. If needed, return to the home screen by pressing the home button or using a system command.\n5. Tap on the Settings app icon from the home screen to open the full settings menu.\n6. Explore or manage additional device settings as required.\n7. Confirm the task is complete and terminate the process with success.",
+    "keywords": [
+      "Wi-Fi",
+      "Settings",
+      "Quick Settings"
+    ],
+    "task_template": "Turn on Wifi, then open the {app_name} app",
+    "difficulty": "easy",
+    "tags": [
+      "parameterized"
+    ],
+    "optimal_steps": "4"
+  },
+  {
+    "task_name": "NotesRecipeIngredientCount",
+    "description": "Find the quantity of a specified ingredient required for a recipe by searching for the recipe title in the Joplin app and extracting the ingredient amount from the recipe details.",
+    "full_experience": "1. Swipe up on the home screen to access the app drawer.\n2. Tap on the Joplin app icon to open it.\n3. Tap the search icon in the Joplin app to initiate a search.\n4. Type the recipe title {title} into the search field.\n5. Tap on the search result for the {title} recipe to view its details.\n6. Locate the ingredient list in the recipe details and identify the quantity of the specified {ingredient}.\n7. Answer with the quantity in the format <amount> <unit> (e.g., '3/4 cup').\n8. Terminate the process with status 'success'.",
+    "keywords": [
+      "Joplin app",
+      "recipe search",
+      "ingredient quantity"
+    ],
+    "task_template": "What quantity of {ingredient} do I need for the recipe '{title}' in the Joplin app? Express your answer in the format <amount> <unit> without using abbreviations.",
+    "difficulty": "easy",
+    "tags": [
+      "search",
+      "parameterized"
+    ],
+    "optimal_steps": "2"
+  },
+  {
+    "task_name": "MarkorCreateNote",
+    "description": "Create a new note in Markor with a specified filename and content, ensuring the correct file type is selected.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Locate and tap on the Markor app icon to open the application.\n3. Tap the red plus icon to initiate the creation of a new note.\n4. Tap on the name field to edit the note's filename.\n5. Type the desired filename {filename} into the name field.\n6. If necessary, tap on the file type dropdown to change the file extension.\n7. Select 'Markdown' from the file type options to ensure the note is saved in the correct format.\n8. Tap 'OK' to confirm the creation of the new note with the specified name and file type.\n9. Type the required text {text} into the newly created note.\n10. Tap the save icon to save the note with the entered content.\n11. Use the 'Done' operation to conclude the task.",
+    "keywords": [
+      "Markor",
+      "note creation",
+      "Markdown"
+    ],
+    "task_template": "Create a new note in Markor named {file_name} with the following text: {text}",
+    "difficulty": "medium",
+    "tags": [
+      "data_entry",
+      "parameterized"
+    ],
+    "optimal_steps": "8"
+  },
+  {
+    "task_name": "TurnOffWifiAndTurnOnBluetooth",
+    "description": "Turn off Wi-Fi and enable Bluetooth through the device settings.",
+    "full_experience": "1. Open the settings app by tapping the gear icon.\n2. Navigate to the 'Network & internet' section to manage network connections.\n3. Access the 'Internet' settings to view Wi-Fi options.\n4. Turn off Wi-Fi by toggling the Wi-Fi switch to the off position.\n5. Return to the main settings menu by tapping the back arrow.\n6. Navigate to the 'Connected devices' section to access Bluetooth settings.\n7. Select 'Connection preferences' to view connection options.\n8. Tap on 'Bluetooth' to open the Bluetooth settings.\n9. Enable Bluetooth by toggling the 'Use Bluetooth' switch to the on position.\n10. Confirm that Bluetooth is enabled and complete the task.",
+    "keywords": [
+      "settings",
+      "Wi-Fi",
+      "Bluetooth"
+    ],
+    "task_template": "Turn off WiFi, then enable bluetooth",
+    "difficulty": "medium",
+    "tags": [
+      ""
+    ],
+    "optimal_steps": "5"
+  },
+  {
+    "task_name": "SportsTrackerActivityDuration",
+    "description": "Determine the duration in minutes of a specific activity type on a given date within the OpenTracks app.",
+    "full_experience": "1. Swipe up on the home screen to access the app drawer.\n2. Swipe through the app drawer to locate the OpenTracks app.\n3. Tap on the OpenTracks app to open it.\n4. In the OpenTracks app, locate and tap on the activity of type {category} that occurred on {date}.\n5. Review the activity details to find the moving time, which is typically displayed in hours and minutes (e.g., HH:MM:SS).\n6. Convert the moving time into minutes as a single integer (e.g., 2:15:00 becomes 135 minutes).\n7. Provide the duration in minutes as the answer.\n8. Terminate the process with a success status.",
+    "keywords": [
+      "OpenTracks",
+      "activity duration",
+      "moving time"
+    ],
+    "task_template": "How long was my {category} activity {date} in the OpenTracks app? Express your answer in minutes as a single integer.",
+    "difficulty": "easy",
+    "tags": [
+      "information_retrieval",
+      "parameterized"
+    ],
+    "optimal_steps": "6"
+  },
+  {
+    "task_name": "OsmAndFavorite",
+    "description": "Add a favorite location marker for a specified {location} in the OsmAnd maps app by entering coordinates and naming the location.",
+    "full_experience": "1. Open the app drawer by swiping up from the home screen.\n2. Locate and tap on the OsmAnd app icon to open it.\n3. Wait for the app to fully load.\n4. If the desired location is not visible on the map, swipe to adjust the map view to the correct area.\n5. Tap the search icon to initiate a search.\n6. Type the coordinates {latitude}, {longitude} into the search bar to locate the desired position.\n7. Tap on the search result to select the location.\n8. Tap the 'Add' button to start adding the location as a favorite.\n9. Enter a name for the favorite location in the 'Name' field (e.g., {name}).\n10. Tap the 'Save' button to finalize adding the location as a favorite.\n11. Confirm the successful addition of the favorite location.\n12. Terminate the process with a success status.",
+    "keywords": [
+      "OsmAnd",
+      "favorite",
+      "coordinates"
+    ],
+    "task_template": "Add a favorite location marker for {location} in the OsmAnd maps app.",
+    "difficulty": "medium",
+    "tags": [
+      "search",
+      "complex_ui_understanding",
+      "parameterized"
+    ],
+    "optimal_steps": "6"
+  },
+  {
+    "task_name": "AudioRecorderRecordAudio",
+    "description": "Record an audio clip using the Audio Recorder app and save it with a specified name.",
+    "full_experience": "1. Swipe up from the bottom of the home screen to open the app drawer.\n2. Locate and tap the Audio Recorder app icon to launch it.\n3. If a warning message appears, tap 'Ok' to dismiss it and proceed.\n4. If prompted, tap 'Get started' to access the main interface of the app.\n5. Configure recording settings (e.g., format, sample rate) and tap 'Apply' to confirm them.\n6. Tap the record button (typically a large circular button) to start recording the audio clip.\n7. After finishing the recording, tap the save button (often represented by a square icon) to initiate the save process.\n8. If prompted, enter a name for the recording in the 'New name' field (e.g., {filename}).\n9. Tap the 'Save' button to confirm and store the audio file with the specified name.\n10. Terminate the process with a success status once the recording is saved.",
+    "keywords": [
+      "record",
+      "save",
+      "audio"
+    ],
+    "task_template": "Record an audio clip using Audio Recorder app and save it.",
+    "difficulty": "easy",
+    "tags": [
+      "requires_setup"
+    ],
+    "optimal_steps": "6"
+  },
+  {
+    "task_name": "MarkorCreateFolder",
+    "description": "Create a new folder with a specified name in the Markor app.",
+    "full_experience": "1. Swipe up from the bottom of the screen to open the app drawer.\n2. Locate and tap on the Markor app icon to open it.\n3. In the Markor app, tap the red '+' button at the bottom right corner to initiate the creation of a new item.\n4. When prompted to name the new item, tap on the text field to edit the name.\n5. Type the desired folder name, such as {folder_name}, into the text field.\n6. Tap the 'OK' button to confirm and create the new folder.\n7. Verify the folder has been created successfully in the list of files and folders.\n8. Terminate the process with a success status.",
+    "keywords": [
+      "Markor",
+      "folder",
+      "create"
+    ],
+    "task_template": "Create a new folder in Markor named {folder_name}.",
+    "difficulty": "easy",
+    "tags": [
+      "data_entry",
+      "parameterized"
+    ],
+    "optimal_steps": "4"
+  },
+  {
+    "task_name": "SimpleCalendarNextEvent",
+    "description": "Retrieve the title(s) of the next upcoming event(s) in the Simple Calendar Pro app.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Locate and tap on the Simple Calendar Pro app to open it.\n3. Navigate to the current date or the next upcoming date in the calendar view.\n4. Tap on the date to view the list of events scheduled for that day.\n5. Identify the next upcoming event(s) by checking the event titles in chronological order.\n6. If there are multiple events, list the titles in a comma-separated format.\n7. Provide the answer with the event title(s) only.\n8. Terminate the process successfully.",
+    "keywords": [
+      "Simple Calendar Pro",
+      "next event",
+      "calendar"
+    ],
+    "task_template": "What is my next upcoming event in Simple Calendar Pro? Answer with the title only. If there are multiples titles, format your answer in a comma separated list.",
+    "difficulty": "easy",
+    "tags": [
+      "complex_ui_understanding",
+      "screen_reading",
+      "information_retrieval",
+      "parameterized"
+    ],
+    "optimal_steps": "4"
+  },
+  {
+    "task_name": "CameraTakeVideo",
+    "description": "Open the camera app, switch to video mode, record a video, and stop the recording to save the clip.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Locate and tap the Camera app icon to launch the camera interface.\n3. If necessary, tap the mode list or video camera icon to switch from photo mode to video mode.\n4. Tap the record button to start capturing the video.\n5. Tap the stop button to end the recording and save the video.\n6. Terminate the process to complete the task.",
+    "keywords": [
+      "camera",
+      "video",
+      "record"
+    ],
+    "task_template": "Take one video.",
+    "difficulty": "medium",
+    "tags": [
+      ""
+    ],
+    "optimal_steps": "3"
+  },
+  {
+    "task_name": "NotesIsTodo",
+    "description": "Determine if a note with a specified title in the Joplin app is marked as a todo item by checking for a checkbox next to the note.",
+    "full_experience": "1. Swipe up from the bottom of the screen to open the app drawer.\n2. Locate and tap on the Joplin app icon to open it.\n3. In the Joplin app, search for a note titled '{title}' or scroll through the list of notes to find it.\n4. Check if the note has a checkbox next to it, which indicates it is marked as a todo item.\n5. If the note is found and has a checkbox, respond with 'True'. If the note is not found or does not have a checkbox, respond with 'False'.\n6. Terminate the task with status 'success'.",
+    "keywords": [
+      "Joplin",
+      "todo",
+      "note"
+    ],
+    "task_template": "Is the note titled '{title}' in the Joplin app marked as a todo item? Respond with either 'True' if it is a todo or 'False' if not.",
+    "difficulty": "easy",
+    "tags": [
+      "information_retrieval",
+      "parameterized"
+    ],
+    "optimal_steps": "2"
+  },
+  {
+    "task_name": "SystemBluetoothTurnOffVerify",
+    "description": "Turn Bluetooth {on_or_off} by navigating through the device settings.",
+    "full_experience": "1. Swipe down from the top of the screen to open the notification shade and quick settings panel.\n2. If the Bluetooth toggle is not visible in the quick settings, press the home button to return to the home screen.\n3. Swipe up from the bottom of the screen to open the app drawer.\n4. Locate and tap on the Settings app icon to open the device settings.\n5. In the Settings menu, tap on 'Connected devices' to access options related to connected devices.\n6. Tap on 'Connection preferences' to access more detailed connection settings.\n7. Tap on 'Bluetooth' to open the Bluetooth settings.\n8. Verify that Bluetooth is turned {on_or_off} as intended. If it is already in the desired state, terminate the process successfully.",
+    "keywords": [
+      "Bluetooth",
+      "Settings",
+      "Connected devices"
+    ],
+    "task_template": "Turn bluetooth {on_or_off}.",
+    "difficulty": "easy",
+    "tags": [
+      "verification"
+    ],
+    "optimal_steps": "2"
+  },
+  {
+    "task_name": "RecipeDeleteMultipleRecipesWithConstraint",
+    "description": "Delete recipes from the Broccoli app that contain a specified ingredient in their directions.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Locate and tap on the Broccoli app icon to open it.\n3. Tap the search icon within the app to initiate a search.\n4. Type the name of the ingredient (e.g., {ingredient}) into the search bar to filter recipes.\n5. Review the search results; if no recipes are found, confirm that there are no recipes to delete and terminate the task successfully.\n6. If recipes are found, proceed to select and delete them based on the specified constraint.",
+    "keywords": [
+      "delete",
+      "recipes",
+      "ingredient"
+    ],
+    "task_template": "Delete the recipes from Broccoli app that use {ingredient} in the directions.",
+    "difficulty": "hard",
+    "tags": [
+      "screen_reading",
+      "repetition",
+      "parameterized"
+    ],
+    "optimal_steps": "20"
+  },
+  {
+    "task_name": "MarkorEditNote",
+    "description": "Edit a specified file in the Markor app by adding a given header text to the top of the note.",
+    "full_experience": "1. Swipe up from the bottom of the screen to open the app drawer.\n2. Locate and tap on the Markor app icon to open the application.\n3. In the Markor app, find and tap on the file named {filename} to open it in the editor.\n4. Tap near the top-left corner of the note to place the cursor at the beginning of the text.\n5. Type the {header} text at the top of the note.\n6. Tap the save icon to save the changes made to the note.\n7. Terminate the process with a success status.",
+    "keywords": [
+      "Markor",
+      "edit",
+      "header"
+    ],
+    "task_template": "Edit {file_name} in Markor. Add to the top of the note {header}",
+    "difficulty": "easy",
+    "tags": [
+      "data_edit",
+      "transcription",
+      "parameterized"
+    ],
+    "optimal_steps": "4"
+  },
+  {
+    "task_name": "SimpleCalendarDeleteEventsOnRelativeDay",
+    "description": "Delete all events scheduled for a specified day of the week in the Simple Calendar Pro app.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Locate and tap on the Calendar app to open it.\n3. Navigate to the calendar view and select the date corresponding to the specified day of the week (e.g., Monday).\n4. If the selected date is not the target day, navigate to the correct day by tapping the next day button.\n5. Tap on the first event scheduled for the target day to open its details.\n6. Tap the delete icon (trash can) to initiate the deletion process.\n7. Confirm the deletion by tapping 'Yes' on the confirmation dialog.\n8. Repeat steps 5-7 for each remaining event on the target day.\n9. Once all events are deleted, confirm the completion of the task.\n10. Terminate the process with a success status.",
+    "keywords": [
+      "delete",
+      "calendar",
+      "events"
+    ],
+    "task_template": "In Simple Calendar Pro, delete all events scheduled for this {day_of_week}.",
+    "difficulty": "medium",
+    "tags": [
+      "data_edit",
+      "parameterized"
+    ],
+    "optimal_steps": "6"
+  },
+  {
+    "task_name": "ExpenseDeleteMultiple",
+    "description": "Delete multiple specified expenses from the Pro Expense app by accessing each expense's details, initiating deletion, and confirming removal.",
+    "full_experience": "1. Swipe up to open the app drawer to locate the Pro Expense app.\n2. Swipe through the app drawer if necessary to find and open the Pro Expense app.\n3. Once the Pro Expense app is open, identify the first expense to be deleted from the list.\n4. Tap on the first expense to view its details.\n5. Tap the delete icon (trash bin) next to the expense detail to initiate deletion.\n6. Confirm the deletion by tapping the 'CONFIRM' button on the confirmation screen.\n7. Repeat steps 3-6 for each remaining expense to be deleted.\n8. After all specified expenses are deleted, terminate the process with a success status.",
+    "keywords": [
+      "delete",
+      "expense",
+      "confirm"
+    ],
+    "task_template": "Delete the following expenses from arduia pro expense: {expenses}.",
+    "difficulty": "easy",
+    "tags": [
+      "data_edit",
+      "parameterized"
+    ],
+    "optimal_steps": "10"
+  },
+  {
+    "task_name": "TasksDueOnDate",
+    "description": "Retrieve and list the titles of tasks due on a specified date from the Tasks app.",
+    "full_experience": "1. Swipe up from the bottom of the home screen to open the app drawer.\n2. Swipe through the app drawer to locate the Tasks app.\n3. Tap on the Tasks app to open it.\n4. In the Tasks app, navigate to the list of tasks and identify those due on {date}.\n5. Extract the titles of all tasks due on {date} and format them as a comma-separated list.\n6. Provide the list of task titles as the answer.\n7. Terminate the process with a success status.",
+    "keywords": [
+      "Tasks app",
+      "due date",
+      "task titles"
+    ],
+    "task_template": "What tasks do I have due {date} in Tasks app? Answer with the titles only. If there are multiples titles, format your answer in a comma separated list.",
+    "difficulty": "easy",
+    "tags": [
+      "search",
+      "parameterized"
+    ],
+    "optimal_steps": "2"
+  },
+  {
+    "task_name": "ExpenseAddSingle",
+    "description": "Add a new expense entry to the Pro Expense app with a specified name, amount, category, and optional note.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Locate and tap on the Pro Expense app icon to open it.\n3. On the Pro Expense app's main screen, tap the \"+\" button to start adding a new expense.\n4. In the 'Name' field, type the name of the expense (e.g., {expense}).\n5. In the 'Amount' field, type the monetary value of the expense (e.g., {amount}).\n6. Swipe horizontally to browse through the available categories and tap on the appropriate category (e.g., {category}).\n7. Tap on the 'Note' field to activate it.\n8. Type a descriptive note in the 'Note' field (e.g., {note}).\n9. Tap the 'SAVE' button to record the expense entry.\n10. Confirm the expense has been added successfully and terminate the process with a success status.",
+    "keywords": [
+      "expense",
+      "Pro Expense",
+      "add"
+    ],
+    "task_template": "Add the following expenses into the arduia pro expense: {expense}",
+    "difficulty": "easy",
+    "tags": [
+      "parameterized",
+      "data_entry",
+      "search"
+    ],
+    "optimal_steps": "6"
+  },
+  {
+    "task_name": "SimpleCalendarAddRepeatingEvent",
+    "description": "Create a recurring calendar event with a specified title, start date and time, duration, recurrence rule, and description in Simple Calendar Pro.",
+    "full_experience": "1. Open the Simple Calendar Pro app by swiping to find it and tapping the app icon.\n2. Tap the '+' button at the bottom right corner to start creating a new calendar event.\n3. Select the start date by tapping on the desired date (e.g., October 15th).\n4. Tap on the 'Event' button to begin entering event details.\n5. Enter the event title in the Title field (e.g., '{event_title}').\n6. Set the start time by tapping on the start time field and selecting the correct hour and minute (e.g., {hour}h).\n7. Confirm the start time by tapping 'OK'.\n8. Tap on the 'No repetition' option to change the recurrence setting.\n9. Select 'Weekly' from the repetition options to set the event to repeat every week.\n10. Tap on the Description field to add the event description (e.g., '{event_description}').\n11. Enter the description text.\n12. Set the end time by tapping on the end time field and adjusting it to match the desired duration (e.g., {hour}h + {duration_mins} minutes).\n13. Confirm the end time by tapping 'OK'.\n14. Tap the checkmark or 'Save' button to confirm and save the event.\n15. Terminate the process successfully as the event has been created and configured correctly.",
+    "keywords": [
+      "calendar",
+      "event",
+      "recurring"
+    ],
+    "task_template": "In Simple Calendar Pro, create a recurring calendar event titled '{event_title}' starting on {year}-{month}-{day} at {hour}h. The event recurs {repeat_rule}, forever, and lasts for {duration_mins} minutes each occurrence. The event description should be '{event_description}'.",
+    "difficulty": "easy",
+    "tags": [
+      "data_entry",
+      "complex_ui_understanding",
+      "parameterized"
+    ],
+    "optimal_steps": "14"
+  },
+  {
+    "task_name": "SimpleCalendarNextMeetingWithPerson",
+    "description": "Find the date and time of the next meeting with a specified person in the Simple Calendar Pro app.",
+    "full_experience": "1. Swipe up on the home screen to open the app drawer.\n2. Locate and tap on the Simple Calendar Pro app to open it.\n3. Navigate to the current month view and check the events for the current date to see if there is a meeting with {person}.\n4. If no meeting is found on the current date, use the search functionality by tapping on the search bar.\n5. Type '{person}' into the search bar to find all events involving {person}.\n6. Identify the next upcoming meeting with {person} from the search results.\n7. Express the date and time of the meeting in the format <month name> <day> <year> <hour in 24-hour format>:<minutes>.\n8. Terminate the process with a success status.",
+    "keywords": [
+      "calendar",
+      "meeting",
+      "search"
+    ],
+    "task_template": "When is my next meeting with {person} in Simple Calendar Pro? Express your answer in the format <month name> <day> <year> <hour in 24-hour format>:<minutes>.",
+    "difficulty": "medium",
+    "tags": [
+      "information_retrieval",
+      "parameterized"
+    ],
+    "optimal_steps": "5"
+  },
+  {
+    "task_name": "ClockStopWatchPausedVerify",
+    "description": "Pause the stopwatch timer using the Clock app on a mobile device.",
+    "full_experience": "1. If the Stopwatch app is not visible on the home screen, swipe up from the bottom of the screen to open the app drawer.\n2. Locate and tap the Clock app icon in the app drawer to open it.\n3. Navigate to the Stopwatch section by tapping the 'Stopwatch' tab at the bottom of the Clock app interface.\n4. If the stopwatch is running, identify the button that controls timing (typically a blue circular button at the bottom center, labeled with a pause symbol or a play symbol).\n5. Tap the button to pause the stopwatch. If the stopwatch is not running, tap the button to start it first, then tap again to pause it.\n6. Confirm the stopwatch has been paused successfully and terminate the task.\n\nVariations:\n- In some cases, the stopwatch may already be running directly on the home screen, allowing you to pause it by tapping the icon directly.\n- If the button is misinterpreted and starts the timer instead of pausing it, tap the button again to stop it.\n- The button may display different symbols (e.g., play, pause, or reset) depending on the app's state, so ensure you tap the correct one based on the current display.",
+    "keywords": [
+      "stopwatch",
+      "pause",
+      "Clock app"
+    ],
+    "task_template": "Pause the stopwatch.",
+    "difficulty": "easy",
+    "tags": [
+      "verification"
+    ],
+    "optimal_steps": "1"
+  },
+  {
+    "task_name": "RecipeDeleteSingleRecipe",
+    "description": "Delete a specified recipe from the Broccoli app by navigating through the app, accessing the recipe details, and confirming its removal.",
+    "full_experience": "1. From the home screen, swipe up to access the app drawer to locate the Broccoli app.\n2. Tap on the Broccoli app icon to open it and access the list of saved recipes.\n3. Locate the recipe titled {recipe_title} in the list and tap on it to open its details page.\n4. On the recipe details page, tap the menu icon (usually represented by three vertical dots) to open the options menu.\n5. Select the 'Delete' option from the menu to initiate the deletion process.\n6. Confirm the deletion by tapping the 'DELETE' button in the confirmation dialog.\n7. Verify that the recipe has been removed by checking the recipe list, which should now show 'No recipes found' or the recipe should no longer be present.\n8. Terminate the process with a success status.",
+    "keywords": [
+      "delete",
+      "recipe",
+      "Broccoli app"
+    ],
+    "task_template": "Delete the following recipes from Broccoli app: {titles}.",
+    "difficulty": "easy",
+    "tags": [
+      "data_edit",
+      "search",
+      "parameterized"
+    ],
+    "optimal_steps": "5"
+  },
+  {
+    "task_name": "TasksHighPriorityTasks",
+    "description": "Retrieve and list the titles of high-priority tasks from the Tasks app.",
+    "full_experience": "1. Swipe up from the bottom of the screen to open the app drawer.\n2. Swipe through the app drawer to locate the Tasks app.\n3. Tap on the Tasks app to open it.\n4. Review the task list and identify tasks marked as high priority (e.g., indicated by a red square or similar visual cue).\n5. Extract and list the titles of all high-priority tasks, separated by commas.\n6. If multiple high-priority tasks exist, format the answer as a comma-separated list.\n7. If no high-priority tasks are found, return an empty list or a message indicating none.\n8. Terminate the process successfully.",
+    "keywords": [
+      "Tasks app",
+      "high priority",
+      "task titles"
+    ],
+    "task_template": "What are my high priority tasks in Tasks app? Answer with the titles only. If there are multiples titles, format your answer in a comma separated list.",
+    "difficulty": "medium",
+    "tags": [
+      "complex_ui_understanding",
+      "search",
+      "information_retrieval",
+      "transcription",
+      "parameterized"
+    ],
+    "optimal_steps": "2"
+  },
+  {
+    "task_name": "AudioRecorderRecordAudioWithFileName",
+    "description": "Record an audio clip and save it with a specified filename using the Audio Recorder app.",
+    "full_experience": "1. Open the app drawer by swiping up from the bottom of the screen.\n2. Locate and tap the Audio Recorder app to launch it.\n3. If a warning message appears, tap 'Ok' to dismiss it and proceed.\n4. Tap the record button to start recording the audio clip.\n5. After recording, tap the save or options icon to initiate the saving process.\n6. Enter the desired filename {filename} into the provided text field.\n7. If the filename field contains unwanted text, long press to select all text, then delete it.\n8. Type the correct filename {filename} into the cleared text field.\n9. Tap the 'Save' button to confirm and save the audio file with the specified name.\n10. Confirm the task completion and terminate the process with success.",
+    "keywords": [
+      "record",
+      "save",
+      "filename"
+    ],
+    "task_template": "Record an audio clip and save it with name \"{file_name}\" using Audio Recorder app.",
+    "difficulty": "easy",
+    "tags": [
+      "data_entry",
+      "complex_ui_understanding",
+      "parameterized"
+    ],
+    "optimal_steps": "10"
+  },
+  {
+    "task_name": "SystemBrightnessMaxVerify",
+    "description": "Adjust the screen brightness to the maximum or minimum value using either the quick settings panel or the Settings app.",
+    "full_experience": "1. Swipe down from the top of the screen to open the notification shade and access quick settings.\n2. Swipe down further in the notification shade to reveal the full settings menu, looking for the brightness slider.\n3. If the brightness slider is not accessible via quick settings, swipe up from the home screen to open the app drawer.\n4. Locate and tap on the Settings app to open it.\n5. In the Settings app, swipe through the options to find and tap on the \"Display\" section.\n6. Within the Display settings, tap on the \"Brightness level\" option to access the brightness adjustment slider.\n7. Adjust the brightness slider to the maximum or minimum value as required.\n8. Confirm the brightness setting and terminate the process with a success status.",
+    "keywords": [
+      "brightness",
+      "settings",
+      "adjustment"
+    ],
+    "task_template": "Turn brightness to the {max_or_min} value.",
+    "difficulty": "easy",
+    "tags": [
+      "verification"
+    ],
+    "optimal_steps": "2"
+  },
+  {
+    "task_name": "SimpleSmsSendReceivedAddress",
+    "description": "Send the address from a received message to another contact using Simple SMS Messenger.",
+    "full_experience": "1. Open the app drawer by swiping up from the home screen.\n2. Locate and open the Simple SMS Messenger app.\n3. Find the conversation with {name2} and open it to view the message containing the event address.\n4. Long press on the address text to select it, then tap to copy the text.\n5. Navigate back to the main conversation list in Simple SMS Messenger.\n6. Tap the \"+\" button to start a new conversation.\n7. Select {name1} as the recipient from the suggestions.\n8. Paste the copied address into the message input field.\n9. Send the message to {name1} by tapping the send button.\n10. Confirm the task is complete and terminate the process.",
+    "keywords": [
+      "send",
+      "address",
+      "message"
+    ],
+    "task_template": "Text the address of the event to {name1} that {name2} just sent me in Simple SMS Messenger",
+    "difficulty": "medium",
+    "tags": [
+      "information_retrieval",
+      "parameterized"
+    ],
+    "optimal_steps": "9"
+  },
+  {
+    "task_name": "SimpleCalendarEventsInNextWeek",
+    "description": "Retrieve and list the titles of all events scheduled in the next week using the Simple Calendar Pro app.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Locate and tap on the Simple Calendar Pro app to open it.\n3. Navigate to the first day of the upcoming week (typically Monday) by selecting the appropriate date in the calendar view.\n4. Tap on each day of the week, starting from Monday, to view the events scheduled for that day.\n5. For each day, check if there are any events and record their titles.\n6. Continue this process for all days of the week, moving to the next day using the navigation arrows.\n7. After reviewing all days, compile the titles of all events found during the week.\n8. If no events are found, confirm that there are no scheduled events.\n9. Provide the list of event titles as a comma-separated string.\n10. Terminate the process with a success status.",
+    "keywords": [
+      "calendar",
+      "events",
+      "next week"
+    ],
+    "task_template": "What events do I have in the next week in Simple Calendar Pro? Answer with the titles only. If there are multiples titles, format your answer in a comma separated list.",
+    "difficulty": "easy",
+    "tags": [
+      "data_entry",
+      "parameterized"
+    ],
+    "optimal_steps": "3"
+  },
+  {
+    "task_name": "SystemWifiTurnOffVerify",
+    "description": "Turn Wi-Fi {on_or_off} by navigating through the device settings or quick settings menu.",
+    "full_experience": "1. Swipe down from the top of the screen to open the notification shade and access the quick settings menu.\n2. Tap on the \"Internet\" option in the quick settings to access detailed network settings.\n3. Navigate to the Wi-Fi toggle switch within the Internet settings.\n4. If the Wi-Fi is not already {on_or_off}, toggle the switch to the desired state.\n5. Confirm that the Wi-Fi is set to {on_or_off} and terminate the process with a success status.\n\nAlternatively:\n1. Open the Settings app by tapping the gear icon on the home screen.\n2. Tap on \"Network & internet\" to access network connection settings.\n3. Tap on \"Internet\" to access Wi-Fi settings.\n4. Locate the Wi-Fi toggle switch and ensure it is set to {on_or_off}.\n5. Confirm the Wi-Fi status and terminate the process with a success status.",
+    "keywords": [
+      "Wi-Fi",
+      "settings",
+      "toggle"
+    ],
+    "task_template": "Turn wifi {on_or_off}.",
+    "difficulty": "easy",
+    "tags": [
+      "verification"
+    ],
+    "optimal_steps": "3"
+  },
+  {
+    "task_name": "RecipeDeleteSingleWithRecipeWithNoise",
+    "description": "Delete a specific recipe from the Broccoli app by locating it in the recipe list, accessing its details, and confirming its removal.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Locate and tap on the Broccoli app icon to open it.\n3. On the recipe list screen, swipe up to scroll through the list until the target recipe, {recipe_name}, is visible.\n4. Tap on the {recipe_name} recipe to open its details page.\n5. Tap the menu icon (three vertical dots) at the top right corner of the screen to open the options menu.\n6. Select the 'Delete' option from the menu.\n7. In the confirmation dialog, tap 'DELETE' to confirm the deletion of the recipe.\n8. Verify that the recipe has been removed from the list and terminate the process with a success status.",
+    "keywords": [
+      "delete",
+      "recipe",
+      "Broccoli app"
+    ],
+    "task_template": "Delete the following recipes from Broccoli app: {titles}.",
+    "difficulty": "easy",
+    "tags": [
+      "search",
+      "screen_reading",
+      "data_edit",
+      "parameterized"
+    ],
+    "optimal_steps": "10"
+  },
+  {
+    "task_name": "SimpleCalendarDeleteOneEvent",
+    "description": "Delete a specific calendar event from Simple Calendar Pro by navigating to the app, locating the event on the specified date and time, and confirming its removal.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Tap on the Simple Calendar Pro app icon to open the calendar.\n3. Navigate to the date {year}-{month}-{day} in the calendar view.\n4. Tap on the event titled '{event_title}' scheduled at {hour}h to open its details.\n5. In the event details screen, tap the trash can icon to initiate deletion.\n6. Confirm the deletion by selecting 'Yes' when prompted.\n7. Verify that the event is no longer listed for that date and terminate the process with success.",
+    "keywords": [
+      "delete",
+      "calendar",
+      "event"
+    ],
+    "task_template": "In Simple Calendar Pro, delete the calendar event on {year}-{month}-{day} at {hour}h with the title '{event_title}'",
+    "difficulty": "easy",
+    "tags": [
+      "data_edit",
+      "complex_ui_understanding",
+      "parameterized"
+    ],
+    "optimal_steps": "6"
+  },
+  {
+    "task_name": "RetroCreatePlaylist",
+    "description": "Create a playlist in the Retro Music app with a specified name and add a list of songs to it in the given order.",
+    "full_experience": "1. Open the Retro Music app by swiping to find it in the app drawer and tapping its icon.\n2. Tap the three-dot menu icon at the top right corner to access the app's main menu.\n3. Select the 'New playlist' option from the menu to begin creating a new playlist.\n4. Enter the desired playlist name into the provided text field.\n5. Tap the 'Create' button to finalize the creation of the playlist.\n6. Navigate back to the main screen to access the list of songs.\n7. For each song to be added to the playlist, tap the three-dot menu icon next to the song.\n8. Select 'Add to playlist' from the context menu.\n9. Choose the newly created playlist from the list of available playlists.\n10. Repeat steps 7-9 for all songs to be added to the playlist.\n11. Once all songs are added, terminate the process successfully.",
+    "keywords": [
+      "playlist",
+      "create",
+      "add songs"
+    ],
+    "task_template": "Create a playlist in Retro Music titled \"{playlist_name}\" with the following songs, in order: {names}",
+    "difficulty": "medium",
+    "tags": [
+      "data_entry",
+      "repetition",
+      "parameterized"
+    ],
+    "optimal_steps": "12"
+  },
+  {
+    "task_name": "SimpleCalendarAddOneEventInTwoWeeks",
+    "description": "Create a calendar event in Simple Calendar Pro two weeks from today at a specified time with a given title, description, and duration.",
+    "full_experience": "1. Open the Simple Calendar Pro app by swiping to find it in the app drawer and tapping on its icon.\n2. Tap the '+' button at the bottom right corner to start creating a new calendar event.\n3. Select the 'Event' option to begin entering event details.\n4. Enter the event title in the Title field.\n5. Select the date that is exactly two weeks from today by tapping on the corresponding date in the calendar.\n6. Tap on the start time to adjust it to the desired hour. Then, tap on the hour wheel to set the correct hour.\n7. Tap 'OK' to confirm the start time.\n8. Tap on the end time to adjust it. Tap on the minute wheel to set the end time to the desired minutes, ensuring the event duration matches the required length.\n9. Tap 'OK' to confirm the end time.\n10. Tap on the Description field and type the event description.\n11. Tap the checkmark or 'Save' button to confirm and save the event.\n12. Terminate the process as the task is complete.",
+    "keywords": [
+      "calendar",
+      "event",
+      "time"
+    ],
+    "task_template": "In Simple Calendar Pro, create a calendar event in two weeks from today at {hour}h with the title '{event_title}' and the description '{event_description}'. The event should last for {duration_mins} mins.",
+    "difficulty": "medium",
+    "tags": [
+      "data_entry",
+      "math_counting",
+      "parameterized"
+    ],
+    "optimal_steps": "10"
+  },
+  {
+    "task_name": "MarkorDeleteAllNotes",
+    "description": "Delete all notes in the Markor app by selecting and confirming the deletion of each note, then verifying that no notes remain.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Tap on the Markor app icon to open it.\n3. In the Markor app, locate the list of notes.\n4. Long-press on the first note to select it for deletion.\n5. Tap the delete icon to initiate the deletion process.\n6. Confirm the deletion by tapping 'OK' in the confirmation dialog.\n7. Repeat steps 4-6 for each remaining note until all notes are selected and deleted.\n8. After deleting all notes, tap the folder icon to navigate to the folder view.\n9. Verify that there are no notes remaining under the 'Notebook' folder.\n10. Terminate the task with a success status.",
+    "keywords": [
+      "delete",
+      "notes",
+      "Markor"
+    ],
+    "task_template": "Delete all my notes in Markor.",
+    "difficulty": "easy",
+    "tags": [
+      "data_edit",
+      "repetition",
+      "parameterized"
+    ],
+    "optimal_steps": "7"
+  },
+  {
+    "task_name": "RecipeDeleteMultipleRecipesWithNoise",
+    "description": "Delete multiple specified recipes from the Broccoli app by searching for each recipe individually and confirming their deletion.",
+    "full_experience": "1. Open the app drawer by swiping up from the home screen.\n2. Tap on the Broccoli app icon to open it.\n3. Tap the search icon in the app to initiate a search.\n4. Type the name of the first recipe to search for it.\n5. Tap on the recipe from the search results to open its details.\n6. Tap the three-dot menu icon to access the options menu.\n7. Select the 'Delete' option from the menu.\n8. Confirm the deletion by tapping 'DELETE' on the confirmation dialog.\n9. Repeat steps 3-8 for each remaining recipe to be deleted, ensuring to clear the search bar before entering the next recipe name.\n10. After all recipes are deleted, terminate the task with a success status.",
+    "keywords": [
+      "delete",
+      "search",
+      "confirm"
+    ],
+    "task_template": "Delete the following recipes from Broccoli app: {titles}.",
+    "difficulty": "medium",
+    "tags": [
+      "parameterized",
+      "search",
+      "complex_ui_understanding",
+      "repetition"
+    ],
+    "optimal_steps": "17"
+  },
+  {
+    "task_name": "SystemWifiTurnOnVerify",
+    "description": "Turn Wi-Fi on by navigating through the device settings or quick settings menu.",
+    "full_experience": "1. Open the device's settings by tapping the gear icon on the home screen, or swipe down from the top of the screen to open the notification shade and quick settings menu.\n2. If using the settings app, navigate to the 'Network & internet' section. If using the quick settings menu, tap on the 'Internet' option.\n3. Access the 'Internet' settings to manage Wi-Fi connections.\n4. Ensure the Wi-Fi toggle is activated (in the 'on' position). If Wi-Fi is already enabled, confirm the status and proceed to completion.\n5. Terminate the process with a success status.",
+    "keywords": [
+      "Wi-Fi",
+      "settings",
+      "toggle"
+    ],
+    "task_template": "Turn wifi {on_or_off}.",
+    "difficulty": "easy",
+    "tags": [
+      "verification"
+    ],
+    "optimal_steps": "3"
+  },
+  {
+    "task_name": "SimpleCalendarEventOnDateAtTime",
+    "description": "Check the titles of events scheduled for a specific date and time in the Simple Calendar Pro app.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Locate and tap on the Simple Calendar Pro app to open it.\n3. Navigate to the desired date in the calendar view.\n4. Tap on the date to view the list of scheduled events.\n5. Identify the event(s) occurring at the specified time and note the title(s).\n6. Answer with the event title(s) only, separated by commas if there are multiple.\n7. Terminate the process with a success status.",
+    "keywords": [
+      "calendar",
+      "event",
+      "schedule"
+    ],
+    "task_template": "What is on my schedule for {date} at {time} in Simple Calendar Pro? Answer with the titles only. If there are multiples titles, format your answer in a comma separated list.",
+    "difficulty": "medium",
+    "tags": [
+      "information_retrieval",
+      "parameterized"
+    ],
+    "optimal_steps": "3"
+  },
+  {
+    "task_name": "ExpenseDeleteMultiple2",
+    "description": "Delete multiple specified expenses from the Pro Expense app by navigating through the app, accessing the expense logs, and confirming the deletion of each entry.",
+    "full_experience": "1. Swipe up to open the app drawer to locate the Pro Expense app.\n2. Tap on the Pro Expense app to open it.\n3. Tap the menu icon to access additional options.\n4. Tap on 'Expense Logs' to view all recorded expenses.\n5. Locate the first expense to be deleted from the list and tap on it to view its details.\n6. Tap the delete icon to initiate the deletion of the expense.\n7. Confirm the deletion by tapping the 'CONFIRM' button.\n8. Repeat steps 5-7 for each remaining expense to be deleted.\n9. After deleting all specified expenses, navigate back to the main screen of the app by tapping the back arrow or menu icon.\n10. Terminate the process with a success status.",
+    "keywords": [
+      "Pro Expense app",
+      "Expense Logs",
+      "delete"
+    ],
+    "task_template": "Delete the following expenses from arduia pro expense: {expenses}.",
+    "difficulty": "hard",
+    "tags": [
+      "screen_reading",
+      "parameterized"
+    ],
+    "optimal_steps": "17"
+  },
+  {
+    "task_name": "SystemBrightnessMinVerify",
+    "description": "Adjust the screen brightness to the specified minimum or maximum value through the device's settings.",
+    "full_experience": "1. Swipe down from the top of the screen to open the notification shade and access quick settings.\n2. Swipe down again to reveal the full settings menu if the brightness slider is not immediately visible.\n3. If the brightness adjustment is not accessible from the quick settings, press the home button to return to the home screen.\n4. From the home screen, open the Settings app by tapping its icon.\n5. In the Settings menu, navigate to the 'Display' section to access brightness controls.\n6. Adjust the brightness slider to the desired minimum or maximum value.\n7. Confirm the change and exit the settings menu.\nNote: If the quick settings do not provide direct access to brightness, the process may involve navigating through the full settings menu from the home screen.",
+    "keywords": [
+      "brightness",
+      "settings",
+      "display"
+    ],
+    "task_template": "Turn brightness to the {max_or_min} value.",
+    "difficulty": "easy",
+    "tags": [
+      "verification"
+    ],
+    "optimal_steps": "3"
+  },
+  {
+    "task_name": "NotesTodoItemCount",
+    "description": "Determine the number of to-dos in a specified folder within the Joplin app by navigating through the app's interface.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Locate and tap on the Joplin app icon to open the application.\n3. Tap the menu icon (usually three horizontal lines) to access the list of folders.\n4. Navigate to the desired folder by selecting it from the list (e.g., '{folder}')\n5. Review the list of notes within the folder and count the number of items marked as incomplete tasks (to-dos).\n6. Provide the count as the answer.\n7. Terminate the process with a success status.",
+    "keywords": [
+      "Joplin",
+      "folder",
+      "to-dos"
+    ],
+    "task_template": "How many to-dos do I have in the '{folder}' folder in the Joplin app? Express your answer as just a single number.",
+    "difficulty": "medium",
+    "tags": [
+      "information_retrieval",
+      "math_counting",
+      "parameterized"
+    ],
+    "optimal_steps": "5"
+  },
+  {
+    "task_name": "ContactsAddContact",
+    "description": "Create a new contact by entering the name and phone number in the designated fields and saving the entry.",
+    "full_experience": "1. Tap on the Phone app icon to open it.\n2. Tap on the 'Contacts' icon at the bottom of the screen to navigate to the Contacts section.\n3. Tap on 'Create new contact' to begin adding the contact details.\n4. Tap on the 'First name' field and enter the first name {name}.\n5. Tap on the 'Last name' field and enter the last name {name}.\n6. Tap on the 'Phone' field and enter the phone number {number}.\n7. Tap on the 'Save' button to add the contact.\n8. Verify that the contact has been successfully added by checking the list of contacts.\n9. The task is completed successfully.",
+    "keywords": [
+      "contact",
+      "add",
+      "save"
+    ],
+    "task_template": "Create a new contact for {name}. Their number is {number}.",
+    "difficulty": "easy",
+    "tags": [
+      "data_entry",
+      "parameterized"
+    ],
+    "optimal_steps": "5"
+  },
+  {
+    "task_name": "RecipeAddSingleRecipe",
+    "description": "Add a new recipe to the Broccoli app by entering its title, description, servings, preparation time, ingredients, and directions, then saving it.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Tap on the Broccoli app icon to open the application.\n3. On the main screen, tap the green circular button with a plus sign in the bottom right corner to start adding a new recipe.\n4. Tap on the 'Title' field and enter the recipe name (e.g., {recipe_name}).\n5. Tap on the 'Description' field and enter a brief description of the recipe (e.g., {description}).\n6. Swipe up to navigate to the 'Servings' field, then tap on it and enter the number of servings (e.g., {servings}).\n7. Tap on the 'Preparation Time' field and enter the required time (e.g., {preparation_time}).\n8. Tap on the 'Ingredients' field and enter the list of ingredients (e.g., {ingredients}).\n9. Tap on the 'Directions' field and enter the step-by-step instructions for preparing the recipe (e.g., {directions}).\n10. Tap the 'SAVE' button in the top right corner to save the recipe.\n11. Confirm that the recipe has been successfully added and terminate the process with a success status.",
+    "keywords": [
+      "add recipe",
+      "Broccoli app",
+      "save recipe"
+    ],
+    "task_template": "Add the following recipes into the Broccoli app:\n{recipe}",
+    "difficulty": "easy",
+    "tags": [
+      "data_entry",
+      "parameterized"
+    ],
+    "optimal_steps": "12"
+  },
+  {
+    "task_name": "ClockStopWatchRunning",
+    "description": "Start and stop the stopwatch function within the Clock app on a mobile device.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Tap on the Clock app to open it.\n3. Navigate to the Stopwatch section within the Clock app by tapping on the corresponding tab at the bottom of the screen.\n4. Tap the play button (usually a blue circular button with a play icon) to start the stopwatch.\n5. Once the desired time has elapsed, tap the stop button (usually a blue rectangular button with a pause icon) to stop the stopwatch and view the elapsed time.",
+    "keywords": [
+      "stopwatch",
+      "clock app",
+      "start"
+    ],
+    "task_template": "Run the stopwatch.",
+    "difficulty": "easy",
+    "tags": [
+      ""
+    ],
+    "optimal_steps": "3"
+  },
+  {
+    "task_name": "RecipeDeleteMultipleRecipes",
+    "description": "Delete multiple specified recipes from the Broccoli app by accessing each recipe's details, selecting the delete option, and confirming the deletion.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Tap on the Broccoli app icon to open it.\n3. Locate the first recipe from the list of recipes to be deleted and tap on it to open its details.\n4. Tap the menu icon (usually represented by three vertical dots) in the top right corner of the screen.\n5. Select the 'Delete' option from the menu.\n6. Confirm the deletion by tapping the 'DELETE' button in the confirmation dialog.\n7. Repeat steps 3-6 for each remaining recipe to be deleted.\n8. Once all specified recipes have been deleted, confirm the task completion by terminating the process with a success status.",
+    "keywords": [
+      "delete",
+      "recipe",
+      "Broccoli app"
+    ],
+    "task_template": "Delete the following recipes from Broccoli app: {titles}.",
+    "difficulty": "easy",
+    "tags": [
+      "data_edit",
+      "parameterized"
+    ],
+    "optimal_steps": "12"
+  },
+  {
+    "task_name": "ClockTimerEntry",
+    "description": "Set a timer for a specified duration of {hours} hours, {minutes} minutes, and {seconds} seconds without starting it.",
+    "full_experience": "1. Swipe up from the bottom of the screen to open the app drawer.\n2. Locate and tap on the Clock app to open it.\n3. Navigate to the Timer section by tapping on the 'Timer' option at the bottom of the screen.\n4. Use the numeric keypad to input the desired duration:\n   - Tap the number corresponding to the first digit of the minutes (e.g., '1' for 16 minutes).\n   - Tap the number corresponding to the second digit of the minutes (e.g., '6' for 16 minutes).\n   - Tap the number corresponding to the first digit of the seconds (e.g., '3' for 35 seconds).\n   - Tap the number corresponding to the second digit of the seconds (e.g., '5' for 35 seconds).\n5. Verify that the timer displays the correct duration of {hours} hours, {minutes} minutes, and {seconds} seconds.\n6. Ensure the timer is not started by not tapping the play button.\n7. Confirm the setup is complete and terminate the process with success.",
+    "keywords": [
+      "timer",
+      "set",
+      "duration"
+    ],
+    "task_template": "Create a timer with {hours} hours, {minutes} minutes, and {seconds} seconds. Do not start the timer.",
+    "difficulty": "easy",
+    "tags": [
+      "data_entry",
+      "parameterized"
+    ],
+    "optimal_steps": "3"
+  },
+  {
+    "task_name": "SimpleCalendarLocationOfEvent",
+    "description": "Find the location of a specific event in the Simple Calendar Pro app by opening the app, navigating to the event, and extracting the location information.",
+    "full_experience": "1. Swipe up from the bottom of the screen to open the app drawer and locate the Simple Calendar Pro app.\n2. Tap on the Simple Calendar Pro app icon to open it.\n3. Navigate to the date of the event by selecting the appropriate day in the calendar view.\n4. Tap on the event titled '{title}' to view its details.\n5. In the event details screen, locate the 'Location' field and extract the location information.\n6. Answer with the location of the event.\n7. Terminate the process with a success status.",
+    "keywords": [
+      "Simple Calendar Pro",
+      "event",
+      "location"
+    ],
+    "task_template": "What is the location of my {title} event in Simple Calendar Pro? Answer with the location only.",
+    "difficulty": "easy",
+    "tags": [
+      "search",
+      "parameterized"
+    ],
+    "optimal_steps": "4"
+  },
+  {
+    "task_name": "SimpleSmsResend",
+    "description": "Resend a previously sent message to a specific contact in the Simple SMS Messenger app.",
+    "full_experience": "1. From the home screen, perform a swipe up gesture to open the app drawer.\n2. Locate and tap on the Simple SMS Messenger app icon to open the application.\n3. In the conversation list, find and tap on the chat with {name} to open the conversation.\n4. Tap on the text input field at the bottom of the screen to activate the keyboard.\n5. Type the message '{message}' into the input field.\n6. Tap the send button (usually an arrow icon) to resend the message.\n7. Confirm the task is complete and terminate the process with a success status.",
+    "keywords": [
+      "resend",
+      "message",
+      "Simple SMS Messenger"
+    ],
+    "task_template": "Resend the message I just sent to {name} in Simple SMS Messenger",
+    "difficulty": "medium",
+    "tags": [
+      "parameterized"
+    ],
+    "optimal_steps": "6"
+  },
+  {
+    "task_name": "BrowserMaze",
+    "description": "Open a specified HTML file from the Downloads folder using Chrome and navigate an 'X' to the bottom-right cell of a grid maze using direction buttons.",
+    "full_experience": "1. Swipe up from the bottom of the screen to open the app drawer and locate the file manager app.\n2. Tap on the 'Files' icon to open the file manager.\n3. Navigate to the 'Downloads' folder and locate the {filename} file.\n4. Tap on the {filename} file to select it.\n5. When prompted, select 'Just once' to open the file with Chrome temporarily.\n6. If a welcome or setup screen appears (e.g., 'Use without an account' or 'Accept & continue'), tap the appropriate option to proceed.\n7. If a search engine prompt appears (e.g., 'Search with Sogou'), tap 'OK' or 'Keep Google' to dismiss it.\n8. Once the maze is displayed, use the direction buttons ('Up', 'Down', 'Left', 'Right') to move the 'X' towards the bottom-right cell.\n9. Continue tapping the direction buttons as needed until the 'X' reaches the target position.\n10. Upon reaching the target, terminate the task successfully as the goal has been achieved.",
+    "keywords": [
+      "file manager",
+      "Chrome",
+      "maze navigation"
+    ],
+    "task_template": "Open the file task.html in Downloads in the file manager; when prompted open it with Chrome. Then navigate the X to the bottom-right cell, by using the direction buttons.",
+    "difficulty": "easy",
+    "tags": [
+      "game_playing",
+      "multi_app",
+      "complex_ui_understanding",
+      "memorization",
+      "parameterized"
+    ],
+    "optimal_steps": "9"
+  },
+  {
+    "task_name": "MarkorCreateNoteFromClipboard",
+    "description": "Create a new note in Markor with a specified name, paste clipboard content into it, and save the note.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Locate and tap the Markor app icon to open it.\n3. Tap the red '+' button at the bottom right corner to initiate the creation of a new note.\n4. Tap on the text field to rename the note.\n5. Type the desired file name {filename} into the name field.\n6. If the file extension needs to be changed (e.g., from .md to .txt), tap on the file extension field, select the appropriate file type from the dropdown menu, and confirm the selection.\n7. Tap the 'OK' button to confirm the creation of the new note.\n8. Long press within the note area to bring up the context menu.\n9. Tap the 'Paste' option to insert the copied content into the note.\n10. Tap the save icon to save the note with the pasted content.\n11. Use the 'Done' operation to conclude the process.",
+    "keywords": [
+      "create note",
+      "paste",
+      "save"
+    ],
+    "task_template": "Create a note in Markor named {file_name}. Perform a paste operation in the note and save the note.",
+    "difficulty": "medium",
+    "tags": [
+      "data_entry",
+      "parameterized"
+    ],
+    "optimal_steps": "7"
+  },
+  {
+    "task_name": "MarkorDeleteNote",
+    "description": "Delete a specified note from the Markor app by opening the app, locating the note, and confirming its deletion.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Locate and tap on the Markor app icon to open it.\n3. In the Markor app, find the note named {filename} by scrolling or searching.\n4. Long-press on the note named {filename} to bring up the options menu.\n5. Tap the delete icon (trash bin) in the options menu to initiate the deletion process.\n6. In the confirmation dialog, tap 'OK' to confirm the deletion of the note named {filename}.\n7. Verify that the note is no longer listed in the Markor app.\n8. Terminate the task with a success status.",
+    "keywords": [
+      "delete",
+      "Markor",
+      "note"
+    ],
+    "task_template": "Delete the note in Markor named {file_name}.",
+    "difficulty": "easy",
+    "tags": [
+      "data_edit",
+      "requires_setup",
+      "parameterized"
+    ],
+    "optimal_steps": "5"
+  },
+  {
+    "task_name": "SimpleCalendarFirstEventAfterStartTime",
+    "description": "Find the first event after a specified time on a given date in the Simple Calendar Pro app.",
+    "full_experience": "1. Swipe up from the bottom of the screen to open the app drawer.\n2. Locate and tap on the Simple Calendar Pro app to open it.\n3. Navigate to the specific date by tapping on the date in the calendar view.\n4. Review the events listed for that date, starting from the specified time, and identify the first event.\n5. Answer with the title(s) of the first event(s) after the specified time, formatted as a comma-separated list if there are multiple.\n6. Terminate the process with a success status.",
+    "keywords": [
+      "Simple Calendar Pro",
+      "event",
+      "date"
+    ],
+    "task_template": "What is my first event after {time} {date} in Simple Calendar Pro? Answer with the titles only. If there are multiples titles, format your answer in a comma separated list.",
+    "difficulty": "easy",
+    "tags": [
+      "parameterized",
+      "screen_reading"
+    ],
+    "optimal_steps": "2"
+  },
+  {
+    "task_name": "SimpleCalendarAddOneEventRelativeDay",
+    "description": "Create a calendar event in Simple Calendar Pro for a specified day of the week at a given hour, with a title, description, and duration of 60 minutes.",
+    "full_experience": "1. Open the Simple Calendar Pro app by swiping up or sideways to access the app drawer and tapping on the app icon.\n2. Tap the '+' button at the bottom right corner to start creating a new calendar event.\n3. Tap on the 'Event' option to begin entering event details.\n4. Enter the event title in the Title field.\n5. Navigate to the correct date for the event by selecting the date on the calendar or using the left arrow to move to the previous day if needed.\n6. Tap on the start time field to adjust the time, then select the correct hour and minute using the clock interface, and confirm by tapping 'OK'.\n7. Tap on the end time field to set the duration, adjust the time to be 60 minutes after the start time, and confirm by tapping 'OK'.\n8. Tap on the Description field and enter the event description.\n9. Tap the checkmark or 'Save' button to confirm and save the event.\n10. Terminate the process successfully as the task is complete.",
+    "keywords": [
+      "calendar",
+      "event",
+      "time"
+    ],
+    "task_template": "In Simple Calendar Pro, create a calendar event for this {day_of_week} at {hour}h with the title '{event_title}' and the description '{event_description}'. The event should last for {duration_mins} mins.",
+    "difficulty": "easy",
+    "tags": [
+      "data_entry",
+      "parameterized"
+    ],
+    "optimal_steps": "17"
+  },
+  {
+    "task_name": "RetroPlayingQueue",
+    "description": "Add a list of songs in a specified order to the playing queue in the Retro music app.",
+    "full_experience": "1. Open the Retro music app by swiping to access the app drawer and tapping the app icon.\n2. Locate the first song in the list by scrolling through the song list.\n3. Tap the three-dot menu next to the song to open the context menu.\n4. Select 'Add to playing queue' from the menu to add the song to the queue.\n5. Repeat steps 2-4 for each subsequent song in the list, ensuring they are added in the correct order.\n6. Once all songs have been added, confirm the task is complete and terminate the process.",
+    "keywords": [
+      "add to queue",
+      "Retro music",
+      "song list"
+    ],
+    "task_template": "Add the following songs, in order, {names} to my playing queue in Retro music.",
+    "difficulty": "easy",
+    "tags": [
+      "parameterized"
+    ],
+    "optimal_steps": "16"
+  },
+  {
+    "task_name": "SimpleCalendarDeleteEvents",
+    "description": "Delete all calendar events on a specified date using the Simple Calendar Pro app.",
+    "full_experience": "1. Open the app drawer by swiping up from the home screen.\n2. Locate and tap on the Simple Calendar Pro app to open it.\n3. Navigate to the specific date {year}-{month}-{day} in the calendar view.\n4. Tap on the first event on the specified date to open its details.\n5. Tap the delete icon (trash can) to initiate the deletion process.\n6. Confirm the deletion by tapping 'Yes' on the confirmation dialog.\n7. Repeat steps 4-6 for each remaining event on the specified date until all events are deleted.\n8. Once all events are removed, terminate the process with a success status.",
+    "keywords": [
+      "delete",
+      "calendar",
+      "event"
+    ],
+    "task_template": "In Simple Calendar Pro, delete all the calendar events on {year}-{month}-{day}",
+    "difficulty": "easy",
+    "tags": [
+      "parameterized",
+      "data_edit"
+    ],
+    "optimal_steps": "7"
+  },
+  {
+    "task_name": "ContactsNewContactDraft",
+    "description": "Navigate to the contacts app, create a new contact draft by entering the first name, last name, phone number, and setting the phone label, without saving the contact.",
+    "full_experience": "1. Open the app drawer by swiping up from the bottom of the screen or swiping sideways to locate the Contacts app.\n2. Tap on the Contacts app icon to open it.\n3. Tap the '+' button at the bottom right corner to start creating a new contact.\n4. Tap on the 'First name' field to activate it for input.\n5. Type the first name {first} into the 'First name' field.\n6. Tap on the 'Last name' field to activate it for input.\n7. Type the last name {last} into the 'Last name' field.\n8. If the phone number field is not visible, swipe up on the screen to reveal it.\n9. Tap on the 'Phone' field to activate it for input.\n10. Type the phone number {phone} into the 'Phone' field.\n11. Tap on the dropdown menu next to the 'Label' field to open the list of options.\n12. Select {phone_label} from the dropdown menu to set the phone label.\n13. Confirm that all details are correct and do not tap the 'Save' button to complete the task without saving the contact.",
+    "keywords": [
+      "Contacts",
+      "New Contact",
+      "Draft"
+    ],
+    "task_template": "Go to the new contact screen and enter the following details: First Name: {first}, Last Name: {last}, Phone: {phone}, Phone Label: {phone_label}. Do NOT hit save.",
+    "difficulty": "easy",
+    "tags": [
+      "screen_reading",
+      "data_entry"
+    ],
+    "optimal_steps": "6"
+  },
+  {
+    "task_name": "SimpleCalendarAddOneEvent",
+    "description": "Create a calendar event in Simple Calendar Pro with a specified title, date, time, duration, and description.",
+    "full_experience": "1. Open the Simple Calendar Pro app by swiping to find it and tapping on the app icon.\n2. Tap the '+' button at the bottom right corner to start creating a new calendar event.\n3. Navigate to the correct date by using the calendar view: swipe or tap the navigation arrows (left or right) to move to the desired month and day.\n4. Tap on the specific date to select it as the event date.\n5. Enter the event title in the Title field.\n6. Tap on the date and time fields to adjust the date and time to the specified values.\n7. Select the correct date from the calendar view and confirm by tapping 'OK'.\n8. Adjust the start time by tapping on the time field and selecting the correct hour and minute, then confirm by tapping 'OK'.\n9. Adjust the end time to ensure the event duration matches the required length (e.g., 60 minutes), then confirm by tapping 'OK'.\n10. Enter the event description in the Description field.\n11. Tap the checkmark or 'Save' button to confirm and save the event.\n12. Terminate the process with a success status.",
+    "keywords": [
+      "calendar",
+      "event",
+      "time"
+    ],
+    "task_template": "In Simple Calendar Pro, create a calendar event on {year}-{month}-{day} at {hour}h with the title '{event_title}' and the description '{event_description}'. The event should last for {duration_mins} mins.",
+    "difficulty": "hard",
+    "tags": [
+      "data_entry",
+      "complex_ui_understanding",
+      "parameterized"
+    ],
+    "optimal_steps": "17"
+  },
+  {
+    "task_name": "SimpleCalendarAddOneEventTomorrow",
+    "description": "Create a calendar event for tomorrow at a specified time with a given title, description, and duration in Simple Calendar Pro.",
+    "full_experience": "1. Open the Simple Calendar Pro app by swiping to find it in the app drawer and tapping on its icon.\n2. Tap the '+' button at the bottom right corner to start creating a new calendar event.\n3. Select the 'Event' option to begin entering event details.\n4. Enter the event title in the Title field.\n5. Set the event date to tomorrow by tapping on the date in the calendar view.\n6. Adjust the start time to the specified hour by tapping on the time setting and selecting the correct hour and minute.\n7. Confirm the start time by tapping 'OK'.\n8. Adjust the end time to be {duration_mins} minutes after the start time by tapping on the end time setting, selecting the correct minute, and confirming with 'OK'.\n9. Enter the event description in the Description field.\n10. Save the event by tapping the checkmark or 'Save' button.\n11. Terminate the process successfully as the task is complete.",
+    "keywords": [
+      "calendar",
+      "event",
+      "tomorrow"
+    ],
+    "task_template": "In Simple Calendar Pro, create a calendar event for tomorrow at {hour}h with the title '{event_title}' and the description '{event_description}'. The event should last for {duration_mins} mins.",
+    "difficulty": "easy",
+    "tags": [
+      "data_entry",
+      "parameterized"
+    ],
+    "optimal_steps": "13"
+  },
+  {
+    "task_name": "FilesMoveFile",
+    "description": "Move the file {filename} from the {source_folder} within the {storage_area} storage area to the {destination_folder} within the same {storage_area} storage area in the Android filesystem.",
+    "full_experience": "1. Swipe up from the bottom of the screen to open the app drawer and locate the 'Files' app.\n2. Tap on the 'Files' app icon to open it and navigate to the {storage_area} storage area.\n3. Tap on the menu icon at the top left corner to explore other storage options.\n4. Tap on '{storage_area}' to open it and navigate to the specific folders inside.\n5. Tap on the '{source_folder}' folder to open it and locate the '{filename}' file.\n6. Swipe up on the screen to scroll down and search for the '{filename}' file.\n7. Long press on '{filename}' to select it for further action.\n8. Tap on the three-dot menu icon at the top right corner to explore available actions.\n9. Tap on 'Move to...' to begin the process of moving the file.\n10. Tap on the menu icon at the top left corner to return to the main storage view.\n11. Tap on '{storage_area}' to open it and access the nested folders including {destination_folder}.\n12. Tap on the '{destination_folder}' folder to select it as the destination for moving the file.\n13. Tap on the 'MOVE' button to complete moving the file to the {destination_folder}.\n14. The task is completed successfully.",
+    "keywords": [
+      "move",
+      "file",
+      "folder"
+    ],
+    "task_template": "Move the file {file_name} from {source_folder} within the sdk_gphone_x86_64 storage area to the {destination_folder} within the same sdk_gphone_x86_64 storage area in the Android filesystem.",
+    "difficulty": "medium",
+    "tags": [
+      "search",
+      "screen_reading",
+      "parameterized"
+    ],
+    "optimal_steps": "10"
+  },
+  {
+    "task_name": "SimpleSmsReply",
+    "description": "Send a predefined message to a specified phone number using the Simple SMS Messenger app.",
+    "full_experience": "1. Open the app drawer by swiping up from the home screen.\n2. Scroll through the app drawer to locate the Simple SMS Messenger app.\n3. Tap on the Simple SMS Messenger app icon to open it.\n4. In the app, locate and tap on the conversation with the target phone number {number}.\n5. Tap on the text input field at the bottom of the screen to activate the keyboard.\n6. Type the message {message} into the text input field.\n7. Tap the send button (usually an arrow icon) to deliver the message.\n8. Confirm the message has been sent and terminate the task successfully.",
+    "keywords": [
+      "send",
+      "message",
+      "SMS"
+    ],
+    "task_template": "Reply to {number} with message: {message} in Simple SMS Messenger",
+    "difficulty": "easy",
+    "tags": [
+      "search",
+      "data_entry",
+      "parameterized"
+    ],
+    "optimal_steps": "4"
+  },
+  {
+    "task_name": "CameraTakePhoto",
+    "description": "Open the camera app and take a photo using the shutter button.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Locate and tap on the Camera app to open it.\n3. Once the camera interface is displayed, tap the shutter button to capture the scene.\n4. Confirm the task completion and terminate the process.",
+    "keywords": [
+      "camera",
+      "photo",
+      "shutter"
+    ],
+    "task_template": "Take one photo.",
+    "difficulty": "easy",
+    "tags": [
+      ""
+    ],
+    "optimal_steps": "2"
+  },
+  {
+    "task_name": "ExpenseDeleteSingle",
+    "description": "Delete a specific expense entry from the Pro Expense app by navigating through the app, locating the entry, and confirming its removal.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Locate and tap on the Pro Expense app to open it.\n3. Navigate to the list of expenses and find the specific {expense} entry.\n4. Tap on the {expense} entry to view its details.\n5. Tap the trash can icon or the delete option to initiate the deletion process.\n6. Confirm the deletion by tapping the 'CONFIRM' button in the confirmation dialog.\n7. Terminate the process with a success status.",
+    "keywords": [
+      "delete",
+      "expense",
+      "Pro Expense"
+    ],
+    "task_template": "Delete the following expenses from arduia pro expense: {expense}.",
+    "difficulty": "easy",
+    "tags": [
+      "screen_reading",
+      "parameterized"
+    ],
+    "optimal_steps": "3"
+  },
+  {
+    "task_name": "FilesDeleteFile",
+    "description": "Delete the file {filename} from the specified folder within the {storage_name} storage area on an Android device.",
+    "full_experience": "1. Open the Files app by tapping its icon.\n2. Navigate to the main storage view by tapping on 'Storage' or using the menu icon to access the list of available storage locations.\n3. Select the specific storage area (e.g., {storage_name}) to access its contents.\n4. Navigate to the target folder (e.g., {subfolder}) by tapping on it.\n5. If the file is not visible, scroll down within the folder to locate it.\n6. Long press on the file {filename} to select it for deletion.\n7. Tap the trash bin icon at the top right corner to initiate the deletion process.\n8. Confirm the deletion by tapping 'OK' in the confirmation dialog.\n9. The task is completed successfully.",
+    "keywords": [
+      "delete",
+      "file",
+      "storage"
+    ],
+    "task_template": "Delete the file {file_name} from the Android filesystem located in the {subfolder} folder within the sdk_gphone_x86_64 storage area.",
+    "difficulty": "medium",
+    "tags": [
+      "data_edit",
+      "parameterized"
+    ],
+    "optimal_steps": "4"
+  },
+  {
+    "task_name": "OpenAppTaskEval",
+    "description": "Open the specified app by accessing the app drawer, locating the app icon, and tapping it, then grant any required permissions to clear pop-ups.",
+    "full_experience": "1. If the target app is not visible on the home screen, swipe up from the bottom of the screen to open the app drawer and search for the {app_name} app.\n2. Locate the {app_name} app icon in the app drawer and tap it to open the app.\n3. If a permission request or pop-up appears upon opening the app, review the request and tap 'Allow' or the appropriate option to grant the necessary permissions.\n4. Confirm that the app is open and functioning without any pop-ups or permission requests.\n5. If the app opens successfully and no further actions are required, terminate the process with a success status.\n\nVariations:\n- In some cases, the user may need to return to the home screen or exit an intermediate screen (e.g., keyboard or date picker) before accessing the app drawer.\n- If the app drawer is accessed through a search function, close the search results to return to the main app drawer view before selecting the app.\n- The specific permission request may vary (e.g., notifications, location, storage), but the action remains to grant the required permissions to proceed.",
+    "keywords": [
+      "open app",
+      "app drawer",
+      "permissions"
+    ],
+    "task_template": "Open the {app_name} app. Clear any pop-ups that may appear by granting all permissions that are required.",
+    "difficulty": "easy",
+    "tags": [
+      "parameterized"
+    ],
+    "optimal_steps": "2"
+  },
+  {
+    "task_name": "SimpleSmsSend",
+    "description": "Send a text message using the Simple SMS Messenger app to a specified phone number with a given message.",
+    "full_experience": "1. Swipe up from the bottom of the screen to open the app drawer.\n2. Swipe through the app drawer to locate the Simple SMS Messenger app.\n3. Tap on the Simple SMS Messenger app icon to open it.\n4. Tap the option to start a new conversation.\n5. Enter the recipient's phone number in the input field.\n6. Confirm the phone number to initiate a new conversation.\n7. Type the message into the message input field.\n8. Tap the send button to deliver the message.\n9. Confirm the message has been sent and terminate the process with success.",
+    "keywords": [
+      "send",
+      "message",
+      "Simple SMS Messenger"
+    ],
+    "task_template": "Send a text message using Simple SMS Messenger to {number} with message: {message}",
+    "difficulty": "medium",
+    "tags": [
+      "parameterized"
+    ],
+    "optimal_steps": "6"
+  },
+  {
+    "task_name": "NotesMeetingAttendeeCount",
+    "description": "Retrieve the number of attendees from a specific meeting note in the Joplin app by searching for the meeting title and extracting the attendance count from the note content.",
+    "full_experience": "1. Open the app drawer by swiping up from the home screen to access all installed applications.\n2. Locate and tap on the Joplin app icon to open it.\n3. If necessary, tap the menu icon to access additional navigation options.\n4. Navigate to the section containing meeting notes, such as 'Meeting Notes', by selecting it from the menu.\n5. Tap the search icon within the app to initiate a search.\n6. Type the exact title of the meeting (e.g., {title}) into the search bar to find the relevant note.\n7. Tap on the search result corresponding to the meeting to open its details.\n8. Review the meeting note content to locate the number of attendees, typically found in a section like 'Meeting Follow-up'.\n9. Extract the number of attendees and provide it as the answer.\n10. Terminate the process successfully after providing the answer.",
+    "keywords": [
+      "Joplin app",
+      "meeting notes",
+      "attendee count"
+    ],
+    "task_template": "How many attendees were present in the meeting titled '{title}' in the Joplin app? Express your answer as just a single number.",
+    "difficulty": "easy",
+    "tags": [
+      "search",
+      "parameterized"
+    ],
+    "optimal_steps": "3"
+  },
+  {
+    "task_name": "SportsTrackerActivitiesCountForWeek",
+    "description": "Count the number of {category} activities performed this week in the OpenTracks app and provide the result as a single integer.",
+    "full_experience": "1. Swipe up on the home screen to access the app drawer.\n2. Swipe through the app drawer to locate the OpenTracks app.\n3. Tap on the OpenTracks app to open it and review the list of activities recorded this week.\n4. If prompted, proceed past any introductory screens by tapping the appropriate button to access the activity logs.\n5. Review the list of activities for this week, starting from Monday, and identify all entries that match the {category} activity type.\n6. Count the total number of {category} activities performed this week.\n7. Provide the count as a single integer answer.\n8. Terminate the process with a success status.",
+    "keywords": [
+      "OpenTracks",
+      "activities",
+      "count"
+    ],
+    "task_template": "How many {category} activities did I do this week in the OpenTracks app? Express your answer as a single integer.",
+    "difficulty": "easy",
+    "tags": [
+      "search",
+      "requires_setup",
+      "parameterized"
+    ],
+    "optimal_steps": "3"
+  },
+  {
+    "task_name": "SportsTrackerTotalDurationForCategoryThisWeek",
+    "description": "Calculate the total duration in minutes of {category} activities recorded in the OpenTracks app for the current week.",
+    "full_experience": "1. Swipe up from the home screen to open the app drawer.\n2. Swipe through the app list to locate the OpenTracks app.\n3. Tap on the OpenTracks app to open it.\n4. Review the list of activities in the OpenTracks app, filtering for {category} activities that occurred this week (starting from Monday).\n5. Sum the durations of all relevant {category} activities and express the total as a single integer in minutes.\n6. Provide the total duration as the answer.\n7. Terminate the process with a success status.",
+    "keywords": [
+      "OpenTracks",
+      "total duration",
+      "this week"
+    ],
+    "task_template": "What was the total duration of {category} activities in the OpenTracks app this week? Express your answer in minutes as a single integer.",
+    "difficulty": "hard",
+    "tags": [
+      "math_counting",
+      "search",
+      "parameterized"
+    ],
+    "optimal_steps": "8"
+  }
+]

@@ -22,6 +22,9 @@ command-line flags.
 
 from collections.abc import Sequence
 import os
+import sys
+import subprocess
+import re
 
 from absl import app
 from absl import flags
@@ -36,10 +39,34 @@ from android_world.agents import gui_owl
 from android_world.env import env_launcher
 from android_world.env import interface
 
-logging.set_verbosity(logging.WARNING)
-
+# Suppress gRPC logging before importing any gRPC-dependent modules
 os.environ['GRPC_VERBOSITY'] = 'ERROR'  # Only show errors
 os.environ['GRPC_TRACE'] = 'none'  # Disable tracing
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow logs
+
+logging.set_verbosity(logging.WARNING)
+print('[RUN] Logging verbosity set to WARNING', flush=True, file=sys.stderr)
+
+# Redirect stderr to filter out gRPC fork_posix messages
+class StderrFilter:
+  """Filter to suppress gRPC fork_posix.cc messages from stderr."""
+  def __init__(self, stream):
+    self.stream = stream
+    self.pattern = re.compile(r'I\d+\s+\d+:\d+:\d+\.\d+\s+\d+\s+fork_posix\.cc:\d+')
+  
+  def write(self, message):
+    if not self.pattern.search(message):
+      self.stream.write(message)
+      self.stream.flush()
+  
+  def flush(self):
+    self.stream.flush()
+  
+  def isatty(self):
+    return self.stream.isatty()
+
+# Apply the filter
+sys.stderr = StderrFilter(sys.__stderr__)
 
 def _find_adb_directory() -> str:
   """Returns the directory where adb is located."""
@@ -146,6 +173,11 @@ _BASE_URL = flags.DEFINE_string(
 )
 # Agent specific.
 _AGENT_NAME = flags.DEFINE_string('agent_name', 'm3a_gpt4v', help='Agent name.')
+_USE_TASK_ENHANCEMENT = flags.DEFINE_boolean(
+    'use_task_enhancement',
+    False,
+    'Whether to enable task enhancement with local experience retrieval.'
+)
 _FIXED_TASK_SEED = flags.DEFINE_boolean(
     'fixed_task_seed',
     False,
@@ -170,10 +202,23 @@ def _get_agent(
   print('Initializing agent...')
   agent = None
   if _AGENT_NAME.value == 'gui_owl':
-    agent = gui_owl.GUIOwl(env, infer_ma3.GUIOwlWrapper(_API_KEY.value, _BASE_URL.value, _MODEL.value), "abs_resized", api_key=None, url=None, output_path=(_TRAJ_OUTPUT_PATH.value))
+    agent = gui_owl.GUIOwl(
+        env,
+        infer_ma3.GUIOwlWrapper(_API_KEY.value, _BASE_URL.value, _MODEL.value),
+        "abs_resized",
+        api_key=None,
+        url=None,
+        output_path=(_TRAJ_OUTPUT_PATH.value),
+        use_task_enhancement=_USE_TASK_ENHANCEMENT.value
+    )
   # Mobile Agent v3.
   elif _AGENT_NAME.value == 'mobile_agent_v3':
-    agent = mobile_agent_v3.MobileAgentV3_M3A(env, infer_ma3.GUIOwlWrapper(_API_KEY.value, _BASE_URL.value, _MODEL.value), output_path=(_TRAJ_OUTPUT_PATH.value))
+    agent = mobile_agent_v3.MobileAgentV3_M3A(
+        env, 
+        infer_ma3.GUIOwlWrapper(_API_KEY.value, _BASE_URL.value, _MODEL.value), 
+        output_path=(_TRAJ_OUTPUT_PATH.value),
+        use_task_enhancement=_USE_TASK_ENHANCEMENT.value
+    )
   
   if not agent:
     raise ValueError(f'Unknown agent: {_AGENT_NAME.value}')

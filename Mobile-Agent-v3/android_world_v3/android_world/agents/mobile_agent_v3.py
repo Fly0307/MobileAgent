@@ -21,6 +21,7 @@ import json
 from android_world.agents import base_agent
 from android_world.agents import infer_ma3 as infer
 from android_world.agents import m3a_utils
+from android_world.agents import experience_utils
 from android_world.env import adb_utils
 from android_world.env import tools
 from android_world.env import interface
@@ -129,7 +130,9 @@ class MobileAgentV3_M3A(base_agent.EnvironmentInteractingAgent):
       vllm: infer.MultimodalLlmWrapper,
       name: str = 'MobileAgentE_M3A',
       wait_after_action_seconds: float = 3.0,
-      output_path: str = ""
+      output_path: str = "",
+      use_task_enhancement: bool = True,
+      actual_goal: str = ""
   ):
       """Initializes a MobileAgentE_M3A Agent.
 
@@ -139,6 +142,8 @@ class MobileAgentV3_M3A(base_agent.EnvironmentInteractingAgent):
           name: The agent name.
           wait_after_action_seconds: Seconds to wait for the screen to stablize
               after executing an action
+          output_path: Path to save output files.
+          use_task_enhancement: Whether to enable task enhancement with experience retrieval.
       """
       super().__init__(env, name)
       self.vllm = vllm
@@ -148,6 +153,11 @@ class MobileAgentV3_M3A(base_agent.EnvironmentInteractingAgent):
       if self.output_path and not os.path.exists(self.output_path):
         os.mkdir(self.output_path)
       self.task_name = {}
+      
+      # Task enhancement configuration and fields
+      self.use_task_enhancement = use_task_enhancement  # Configuration flag for task enhancement
+      self.enhanced_goal = None  # Cache for enhanced task description
+      self.original_goal = None  # Track original goal for detecting new tasks
       
       # init info pool
       self.info_pool = InfoPool(
@@ -210,18 +220,73 @@ class MobileAgentV3_M3A(base_agent.EnvironmentInteractingAgent):
       err_to_manager_thresh=2
     )
     
+    # Clear enhanced goal on reset
+    self.enhanced_goal = None
+    self.original_goal = None
+    self.actual_goal = None
+    
   def get_task_name(self, suite):
     for name, instances in suite.items():
       self.task_name[instances[0].goal] = name
 
+  def _get_task_output_dir(self, goal: str) -> str:
+    """Get output directory for a task based on task type name.
+    
+    Args:
+      goal: The original task goal/description
+      
+    Returns:
+      The output directory path for this task
+    """
+    if goal in self.task_name:
+      task_dir_name = self.task_name[goal]
+    else:
+      task_dir_name = goal.replace(" ", "_")[:50]
+    
+    task_output_dir = os.path.join(self.output_path, task_dir_name)
+    return task_output_dir
+
   def step(self, goal: str) -> base_agent.AgentInteractionResult:
+    ## Handle task enhancement with experience retrieval ##
+    # If this is a new goal or goal has changed, try to enhance it with experience
+    if self.original_goal != goal:
+      self.original_goal = goal
+      
+      if self.use_task_enhancement:
+        try:
+          print(f"[EXPERIENCE] Original task: {goal}", flush=True)
+          enhanced = experience_utils.enhance_task_with_experience(goal)
+          if enhanced and enhanced != goal:
+            print(f"[EXPERIENCE] Task enhanced: {enhanced}", flush=True)
+            self.enhanced_goal = enhanced
+          else:
+            print(f"[EXPERIENCE] No relevant experience found, using original task", flush=True)
+            self.enhanced_goal = goal
+        except Exception as e:
+          print(f"[EXPERIENCE] Task enhancement failed: {e}, using original task", flush=True)
+          self.enhanced_goal = goal
+      else:
+        print(f"[EXPERIENCE] Task enhancement is disabled, using original task", flush=True)
+        self.enhanced_goal = goal
+      
+      # Save task description and enhancement info
+      if self.output_path:
+        self._save_task_description(goal)
+    
+    # Use enhanced goal in planning phase
+    if self.actual_goal is None:
+      # self.actual_goal = self.enhanced_goal if self.enhanced_goal else goal
+      self.actual_goal = f"Global goal is: {goal}\n you can refer to the detailed experiences to help you complete the Global goal: {self.enhanced_goal}"
+
+    actual_goal = self.actual_goal
+    print(f"[TASK] Using task for planning: {actual_goal}", flush=True)
     ## init agents ## 
     manager = Manager()
     executor = Executor()
     notetaker = Notetaker()
     action_reflector = ActionReflector()
     
-    self.info_pool.instruction = goal
+    self.info_pool.instruction = actual_goal  # Use enhanced goal for the planning
     step_idx = len(self.info_pool.action_history)
     
     self.info_pool.additional_knowledge_manager=copy.deepcopy(""),
@@ -237,10 +302,8 @@ class MobileAgentV3_M3A(base_agent.EnvironmentInteractingAgent):
     state = self.get_post_transition_state()
     before_screenshot = state.pixels.copy()
     
-    if self.info_pool.instruction not in self.task_name:
-      task_output_dir = os.path.join(self.output_path, self.info_pool.instruction.replace(" ", "_")[:50])
-    else:
-      task_output_dir = os.path.join(self.output_path, self.task_name[self.info_pool.instruction])
+    # Get task output directory using goal (task type), not the enhanced instruction
+    task_output_dir = self._get_task_output_dir(goal)
     if not os.path.exists(task_output_dir):
       os.mkdir(task_output_dir)
     save_screenshot = Image.fromarray(before_screenshot)
@@ -304,10 +367,8 @@ class MobileAgentV3_M3A(base_agent.EnvironmentInteractingAgent):
       action_description = "Finished by planner"
       self.info_pool.action_pool.append(action_object_str)
 
-      if self.info_pool.instruction not in self.task_name:
-        task_output_dir = os.path.join(self.output_path, self.info_pool.instruction.replace(" ", "_")[:50])
-      else:
-        task_output_dir = os.path.join(self.output_path, self.task_name[self.info_pool.instruction])
+      # Get task output directory using goal (task type), not the enhanced instruction
+      task_output_dir = self._get_task_output_dir(goal)
       if not os.path.exists(task_output_dir):
         os.mkdir(task_output_dir)
       save_screenshot = Image.fromarray(before_screenshot)
@@ -492,10 +553,8 @@ class MobileAgentV3_M3A(base_agent.EnvironmentInteractingAgent):
           
           print('Important notes: ' + important_notes, "\n")
     
-    if self.info_pool.instruction not in self.task_name:
-      task_output_dir = os.path.join(self.output_path, self.info_pool.instruction.replace(" ", "_")[:50])
-    else:
-      task_output_dir = os.path.join(self.output_path, self.task_name[self.info_pool.instruction])
+    # Get task output directory using goal (task type), not the enhanced instruction
+    task_output_dir = self._get_task_output_dir(goal)
     if not os.path.exists(task_output_dir):
       os.mkdir(task_output_dir)
     save_screenshot = Image.fromarray(before_screenshot)
@@ -514,3 +573,49 @@ class MobileAgentV3_M3A(base_agent.EnvironmentInteractingAgent):
           False,
           asdict(self.info_pool),
       )
+
+  def _save_task_description(self, goal: str) -> None:
+    """Save original and enhanced task descriptions for reference.
+    
+    Args:
+      goal: The original task description
+    """
+    if not self.output_path:
+      return
+    
+    try:
+      # Create task directory using the _get_task_output_dir helper
+      task_output_dir = self._get_task_output_dir(goal)
+      
+      if not os.path.exists(task_output_dir):
+        os.mkdir(task_output_dir)
+      
+      # Save task info as JSON
+      task_info = {
+          'original_task': goal,
+          'enhanced_task': self.enhanced_goal if self.enhanced_goal else goal,
+          'actual_task_used_for_planning': self.actual_goal if self.actual_goal else goal,
+          'timestamp': time.time(),
+      }
+      
+      task_info_path = os.path.join(task_output_dir, "task_description.json")
+      with open(task_info_path, 'w', encoding='utf-8') as f:
+        json.dump(task_info, f, ensure_ascii=False, indent=2)
+      
+      # Also save as text file for easy reading
+      task_text_path = os.path.join(task_output_dir, "task_description.txt")
+      with open(task_text_path, 'w', encoding='utf-8') as f:
+        f.write("Task Description Information\n")
+        f.write("=" * 60 + "\n\n")
+        f.write(f"Original Task: {goal}\n\n")
+        if self.enhanced_goal and self.enhanced_goal != goal:
+          f.write(f"Enhanced Task: {self.enhanced_goal}\n\n")
+          f.write("Enhancement Details:\n")
+          f.write("-" * 60 + "\n")
+          f.write("The task description has been enhanced using local experience retrieval.\n")
+          f.write("This enhanced description provides more detailed steps and guidance.\n")
+      
+      print(f"[EXPERIENCE] Saved task description to {task_info_path}", flush=True)
+      
+    except Exception as e:
+      print(f"[EXPERIENCE] Failed to save task description: {e}", flush=True)
