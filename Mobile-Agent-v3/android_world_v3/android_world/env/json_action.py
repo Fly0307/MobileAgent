@@ -121,7 +121,7 @@ class JSONAction:
       self.index = int(self.index)
       if self.x is not None or self.y is not None:
         raise ValueError('Either an index or a <x, y> should be provided.')
-    if self.direction and self.direction not in _SCROLL_DIRECTIONS:
+    if self.action_type == SCROLL and self.direction not in _SCROLL_DIRECTIONS:
       raise ValueError(f'Invalid scroll direction: {self.direction}')
     if self.text is not None and not isinstance(self.text, str):
       self.text = str(self.text)

@@ -23,6 +23,7 @@ from android_world.env import adb_utils
 from android_world.env import tools
 from android_world.agents import new_json_action as json_action
 from PIL import Image, ImageDraw, ImageFont
+from typing import Optional
 import base64
 import json
 import pprint
@@ -401,6 +402,9 @@ class GUIOwl(base_agent.EnvironmentInteractingAgent):
     self.output_list = []
     self._response = []
     self.task_name = {}
+    self.current_task_type = None
+    self._task_type_counts = {}
+    self._task_dir_name = None
     
     # Task enhancement configuration and fields
     self.use_task_enhancement = use_task_enhancement  # Configuration flag for task enhancement
@@ -460,10 +464,160 @@ class GUIOwl(base_agent.EnvironmentInteractingAgent):
     adb_utils.press_home_button(self.env.controller)
     time.sleep(2.0)
     print("Done additional chrome initialization")
+  
+  def _validate_action(self, action: json_action.JSONAction) -> Optional[str]:
+    """Validate JSONAction has correct fields for its action type.
+    
+    Args:
+      action: The JSONAction to validate
+      
+    Returns:
+      Error message if validation fails, None if validation passes
+    """
+    if action is None:
+      return "Action is None"
+    
+    action_type = action.action_type
+    
+    # Define required and allowed fields for each action type
+    action_requirements = {
+        json_action.CLICK: {
+            'required_one_of': [['x', 'y'], ['index']],
+            'allowed': ['x', 'y', 'index']
+        },
+        json_action.DOUBLE_TAP: {
+            'required_one_of': [['x', 'y'], ['index']],
+            'allowed': ['x', 'y', 'index']
+        },
+        json_action.LONG_PRESS: {
+            'required_one_of': [['x', 'y'], ['index']],
+            'allowed': ['x', 'y', 'index']
+        },
+        json_action.INPUT_TEXT: {
+            'required': ['text'],
+            'allowed': ['text', 'x', 'y', 'index', 'clear_text']
+        },
+        json_action.SWIPE: {
+            'required': ['direction'],
+            'allowed': ['direction']
+        },
+        json_action.SCROLL: {
+            'required': ['direction'],
+            'allowed': ['direction', 'index']
+        },
+        json_action.OPEN_APP: {
+            'required': ['app_name'],
+            'allowed': ['app_name']
+        },
+        json_action.STATUS: {
+            'required': ['goal_status'],
+            'allowed': ['goal_status']
+        },
+        json_action.ANSWER: {
+            'required': ['text'],
+            'allowed': ['text']
+        },
+        json_action.NAVIGATE_HOME: {
+            'allowed': []
+        },
+        json_action.NAVIGATE_BACK: {
+            'allowed': []
+        },
+        json_action.KEYBOARD_ENTER: {
+            'allowed': []
+        },
+        json_action.WAIT: {
+            'allowed': []
+        },
+        json_action.UNKNOWN: {
+            'allowed': []
+        }
+    }
+    
+    if action_type not in action_requirements:
+      return f"Unknown action type: {action_type}"
+    
+    requirements = action_requirements[action_type]
+    
+    # Get all non-None fields in the action (excluding action_type)
+    action_fields = {k: v for k, v in action.__dict__.items() 
+                     if v is not None and k != 'action_type'}
+    
+    # Check required fields
+    if 'required' in requirements:
+      for required_field in requirements['required']:
+        if required_field not in action_fields:
+          return f"Missing required field '{required_field}' for action type '{action_type}'"
+    
+    # Check required_one_of (at least one group of fields must be present)
+    if 'required_one_of' in requirements:
+      found_group = False
+      for field_group in requirements['required_one_of']:
+        if all(field in action_fields for field in field_group):
+          found_group = True
+          break
+      if not found_group:
+        groups_str = ' or '.join([str(g) for g in requirements['required_one_of']])
+        return f"Missing required fields for action type '{action_type}'. Need one of: {groups_str}"
+    
+    # Check for extra fields
+    allowed_fields = requirements.get('allowed', [])
+    for field in action_fields:
+      if field not in allowed_fields:
+        return f"Unexpected field '{field}' for action type '{action_type}'. Allowed: {allowed_fields}"
+    
+    # Additional type-specific validation with detailed format checks
+    if action_type == json_action.SWIPE:
+      # SWIPE requires direction to be a list/tuple of exactly 4 numeric coordinates
+      if not isinstance(action.direction, (list, tuple)):
+        return f"SWIPE action requires direction to be a list/tuple of coordinates [start_x, start_y, end_x, end_y], got type: {type(action.direction)}"
+      if len(action.direction) != 4:
+        return f"SWIPE action requires direction to have exactly 4 coordinates [start_x, start_y, end_x, end_y], got {len(action.direction)} values: {action.direction}"
+      if not all(isinstance(coord, (int, float)) for coord in action.direction):
+        return f"SWIPE action requires all coordinates to be numeric, got: {action.direction}"
+    
+    if action_type == json_action.SCROLL:
+      # SCROLL requires direction to be a string (up/down/left/right), NOT coordinates
+      valid_directions = ['up', 'down', 'left', 'right']
+      if not isinstance(action.direction, str):
+        return f"SCROLL action requires direction to be a string (one of {valid_directions}), NOT coordinates. Got type: {type(action.direction)}, value: {action.direction}. Did you mean to use SWIPE action?"
+      if action.direction not in valid_directions:
+        return f"SCROLL action requires direction to be one of {valid_directions}, got: '{action.direction}'"
+    
+    if action_type in [json_action.CLICK, json_action.DOUBLE_TAP, json_action.LONG_PRESS]:
+      # Coordinates must be numeric
+      if 'x' in action_fields and 'y' in action_fields:
+        if not isinstance(action.x, (int, float)) or not isinstance(action.y, (int, float)):
+          return f"{action_type.upper()} action requires x and y to be numeric, got x={action.x} (type: {type(action.x)}), y={action.y} (type: {type(action.y)})"
+    
+    return None  # Validation passed
     
   def get_task_name(self, suite):
     for name, instances in suite.items():
       self.task_name[instances[0].goal] = name
+
+  def start_task(self, task_type: str) -> None:
+    """Set current task type and assign a unique output directory name."""
+    if not task_type:
+      self.current_task_type = None
+      self._task_dir_name = None
+      return
+    self.current_task_type = task_type
+    count = self._task_type_counts.get(task_type, 0)
+    self._task_type_counts[task_type] = count + 1
+    self._task_dir_name = task_type if count == 0 else f"{task_type}_{count}"
+
+  def _get_task_output_dir(self, goal: str) -> str:
+    """Build a stable task output directory for the given goal.
+
+    Falls back to a sanitized goal string when task name mapping is missing.
+    """
+    if not self.output_path:
+      return ""
+    task_dir_name = self._task_dir_name or self.current_task_type
+    if not task_dir_name:
+      task_dir_name = goal.replace(" ", "_")[:50]
+    return os.path.join(self.output_path, task_dir_name)
   
   def step(
       self, goal: str) -> base_agent.AgentInteractionResult:
@@ -543,13 +697,14 @@ class GUIOwl(base_agent.EnvironmentInteractingAgent):
     screenshot_file = f"screenshot_{step_idx}.png"
     
     if self.output_path:
-      if goal not in self.task_name:
-        task_output_dir = os.path.join(self.output_path, goal.replace(" ", "_")[:50])
-      else:
-        task_output_dir = os.path.join(self.output_path, self.task_name[goal], f"{self.task_index}")
+      # if goal not in self.task_name:
+      #   task_output_dir = os.path.join(self.output_path, goal.replace(" ", "_")[:50])
+      # else:
+      #   task_output_dir = os.path.join(self.output_path, self.task_name[goal], f"{self.task_index}")
+      task_output_dir = self._get_task_output_dir(goal)
       screenshot_file = os.path.join(task_output_dir, f"screenshot_{step_idx}.png")
-      if not os.path.exists(task_output_dir):
-        os.mkdir(task_output_dir)
+      if task_output_dir and not os.path.exists(task_output_dir):
+        os.makedirs(task_output_dir, exist_ok=True)
       screenshot.save(screenshot_file)
       with open(os.path.join(task_output_dir, "action.jsonl"), 'w', encoding='utf-8') as f:
         for item in self._actions:
@@ -579,63 +734,107 @@ class GUIOwl(base_agent.EnvironmentInteractingAgent):
       user_prompt_part['content'].append({"type": "text", 'text': DETAILED_TIPS})
     
     messages = [system_prompt_part, user_prompt_part]
-
-    action_response, _, _ = self.vllm.predict_mm(
-          "",
-          [],
-          messages=messages
-      )
+    # print('========== messages begin ==========')
+    # pprint.pprint(messages)
+    # print('========== messages end ==========')
     
-    result["action_response"] = action_response
-    print('========== action_response ==========')
-    pprint.pprint(action_response)
-
-    dummy_action = None
+    # Retry mechanism for model calling and action parsing
+    max_retries = 3
+    retry_count = 0
+    action_validated = False
     thought = None
     summary = None
-    dummy_action_translated = None
-    try:
-      if self.add_thought:
-        if '</think>' in action_response:
-          thought = action_response.split('</think>')[0].strip('<think>').strip('\n')
-        else:
-          thought = action_response.split('<thinking>\n')[1].split('\n</thinking>')[0]
-        dummy_action = '{"name": "mobile_use"' + action_response.split('{"name": "mobile_use"')[1].split('}}\n')[0] + '}}'
-        summary = action_response.split('<conclusion>\n')[1].split('\n</conclusion>')[0]
-      else:
-        dummy_action = '{"name": "mobile_use"' + action_response.split('{"name": "mobile_use"')[1].split('}}\n')[
-            0] + '}}'
+    
+    while retry_count < max_retries and not action_validated:
+      try:
+        action_response, _, _ = self.vllm.predict_mm(
+              "",
+              [],
+              messages=messages
+          )
+        
+        result["action_response"] = action_response
+        print('========== action_response ==========')
+        pprint.pprint(action_response)
+
+        dummy_action = None
         thought = None
         summary = None
+        dummy_action_translated = None
+        
+        if self.add_thought:
+          if '</think>' in action_response:
+            thought = action_response.split('</think>')[0].strip('<think>').strip('\n')
+          else:
+            thought = action_response.split('<thinking>\n')[1].split('\n</thinking>')[0]
+          dummy_action = '{"name": "mobile_use"' + action_response.split('{"name": "mobile_use"')[1].split('}}\n')[0] + '}}'
+          summary = action_response.split('<conclusion>\n')[1].split('\n</conclusion>')[0]
+        else:
+          dummy_action = '{"name": "mobile_use"' + action_response.split('{"name": "mobile_use"')[1].split('}}\n')[
+              0] + '}}'
+          thought = None
+          summary = None
 
-      dummy_action = json.loads(dummy_action)
-      dummy_action['arguments']['action'] = dummy_action['arguments']['action'].replace('tap', 'click')
-      if len(self._actions) > 0 and self._actions[-1]['arguments']['action'] == 'answer':
-          dummy_action = {"name": "mobile_use", "arguments": {"action": "terminate", "status": "success"}}
-          self.env.interaction_cache =  self._actions[-1]['arguments']['text']
+        dummy_action = json.loads(dummy_action)
+        dummy_action['arguments']['action'] = dummy_action['arguments']['action'].replace('tap', 'click')
+        if len(self._actions) > 0 and self._actions[-1]['arguments']['action'] == 'answer':
+            dummy_action = {"name": "mobile_use", "arguments": {"action": "terminate", "status": "success"}}
+            # self.env.interaction_cache =  self._actions[-1]['arguments']['text']
 
-      action, dummy_action_translated = mobile_agent_utils.convert_mobile_agent_action_to_json_action(
-          dummy_action, current_image_ele, src_format=self.src_format, tgt_format='abs_origin'
-      )
+        action, dummy_action_translated = mobile_agent_utils.convert_mobile_agent_action_to_json_action(
+            dummy_action, current_image_ele, src_format=self.src_format, tgt_format='abs_origin'
+        )
 
-      result["dummy_action"] = dummy_action
-      result["dummy_action_translated"] = dummy_action_translated
-      result["action"] = action
-    except seeact_utils.ParseActionError as e:
-      action = json_action.JSONAction(action_type=json_action.UNKNOWN)
-      result["seeact_action"] = None
-      result["action"] = action
-    except:
+        result["dummy_action"] = dummy_action
+        result["dummy_action_translated"] = dummy_action_translated
+        result["action"] = action
+        
+        # Validate the action before execution
+        validation_error = self._validate_action(action)
+        if validation_error:
+          print(f"[ACTION VALIDATION] Retry {retry_count + 1}/{max_retries}: {validation_error}")
+          retry_count += 1
+          if retry_count < max_retries:
+            # Add validation error to messages for next retry
+            messages = copy.deepcopy([system_prompt_part, user_prompt_part])
+            messages.append({
+              'role': 'assistant',
+              'content': [{'text': action_response}]
+            })
+            messages.append({
+              'role': 'user',
+              'content': [{'text': f"The previous action failed validation: {validation_error}. Please provide a corrected action."}]
+            })
+            continue
+          else:
+            print(f"[ACTION VALIDATION] Max retries reached. Executing UNKNOWN action.")
+            action = json_action.JSONAction(action_type=json_action.UNKNOWN)
+            result["action"] = action
+            break
+        else:
+          print(f"[ACTION VALIDATION] Action validated successfully: {action}")
+          action_validated = True
+          
+      except seeact_utils.ParseActionError as e:
+        print(f"[PARSE ERROR] Retry {retry_count + 1}/{max_retries}: {e}")
+        retry_count += 1
+        if retry_count >= max_retries:
+          action = json_action.JSONAction(action_type=json_action.UNKNOWN)
+          result["seeact_action"] = None
+          result["action"] = action
+          break
+      except Exception as e:
+        print(f"[UNEXPECTED ERROR] Retry {retry_count + 1}/{max_retries}: {e}")
+        import traceback
         traceback.print_exc()
-        print(action_response)
-        raise
-    else:
-      actuation.execute_adb_action(
-          action,
-          [],
-          self.env.logical_screen_size,
-          self.env.controller
-      )
+        retry_count += 1
+        if retry_count >= max_retries:
+          print(action_response)
+          raise
+    
+    # Execute action only if validated
+    if action_validated:
+      self.env.execute_action(action)
       
       self._text_actions.append(summary)
       self._actions.append(dummy_action)
@@ -644,12 +843,32 @@ class GUIOwl(base_agent.EnvironmentInteractingAgent):
       self._response.append(action_response)
 
     if self.output_path:
-      if goal not in self.task_name:
-        task_output_dir = os.path.join(self.output_path, goal.replace(" ", "_")[:50])
-      else:
-        task_output_dir = os.path.join(self.output_path, self.task_name[goal], f"{self.task_index}")
-      if not os.path.exists(task_output_dir):
-        os.mkdir(task_output_dir)
+      # if goal not in self.task_name:
+      #   task_output_dir = os.path.join(self.output_path, goal.replace(" ", "_")[:50])
+      # else:
+      #   task_output_dir = os.path.join(self.output_path, self.task_name[goal], f"{self.task_index}")
+      task_output_dir = self._get_task_output_dir(goal)
+      if task_output_dir and not os.path.exists(task_output_dir):
+        os.makedirs(task_output_dir, exist_ok=True)
+
+      # Save per-step think/conclusion
+      try:
+        think_conclusion_file = os.path.join(task_output_dir, "react.jsonl")
+        action_payload = None
+        if action is not None:
+          try:
+            action_payload = json.loads(action.json_str())
+          except Exception:
+            action_payload = str(action)
+        with open(think_conclusion_file, 'a', encoding='utf-8') as f:
+          f.write(json.dumps({
+              "step": step_idx,
+              "think": thought,
+              "action": action_payload,
+              "conclusion": summary
+          }, ensure_ascii=False) + "\n")
+      except Exception as e:
+        print(f"[TASK] Failed to save think/conclusion: {e}", flush=True)
       
       # 对截图进行动作标记可视化（在保存前进行标记）
       try:
@@ -685,14 +904,14 @@ class GUIOwl(base_agent.EnvironmentInteractingAgent):
     
     try:
       # Get task output directory using goal (task type), not the enhanced instruction
-      if goal not in self.task_name:
-        task_dir_name = goal.replace(" ", "_")[:50]
-      else:
-        task_dir_name = self.task_name[goal]
+      # if goal not in self.task_name:
+      #   task_dir_name = goal.replace(" ", "_")[:50]
+      # else:
+      #   task_dir_name = self.task_name[goal]
       
-      task_output_dir = os.path.join(self.output_path, task_dir_name)
-      if not os.path.exists(task_output_dir):
-        os.mkdir(task_output_dir)
+      task_output_dir = self._get_task_output_dir(goal)
+      if task_output_dir and not os.path.exists(task_output_dir):
+        os.makedirs(task_output_dir, exist_ok=True)
       
       # Save task descriptions
       task_info = {

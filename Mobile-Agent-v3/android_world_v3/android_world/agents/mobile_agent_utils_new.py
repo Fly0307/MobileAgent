@@ -197,6 +197,8 @@ def convert_mobile_agent_action_to_json_action(
       "system_button": "system_button",
       "open": json_action.OPEN_APP, # TODO
       "open_app": json_action.OPEN_APP, # TODO
+      "status": json_action.STATUS,
+      "scroll": json_action.SCROLL,
     }
 
     x = None
@@ -231,7 +233,50 @@ def convert_mobile_agent_action_to_json_action(
 
         direction = [start_x, start_y, end_x, end_y]
         # direction = _swipe_to_scroll(arguments['coordinate'], arguments['coordinate2'])
+    elif action_type == json_action.SCROLL:
+        # convert to swipe
+        action_type = json_action.SWIPE
+        start_x, start_y = arguments['coordinate']
+        end_x, end_y = arguments['coordinate2']
+        start_x, start_y = convert_point_format([start_x, start_y], img_ele, src_format=src_format, tgt_format=tgt_format)
+        end_x, end_y = convert_point_format([end_x, end_y], img_ele, src_format=src_format, tgt_format=tgt_format)
 
+        # The direction parameter for the ‘scroll‘ action 
+        # can be confusing sometimes as it’s op- posite to swipe, 
+        # for example, to view content at the bottom, 
+        # the ‘scroll‘ direction should be set to ”down”.
+        if start_x < end_x:
+            direction = 'left' # swipe right
+        elif start_x > end_x:
+            direction = 'right' # swipe left
+        elif start_y < end_y:
+            direction = 'up' # swipe down
+        elif start_y > end_y:
+            direction = 'down' # swipe up    
+        dummy_action_translated['arguments']['direction'] = direction
+    # elif action_type == json_action.SCROLL:
+    #     # convert to swipe
+    #     action_type = json_action.SWIPE
+    #     direction = arguments['direction']
+    #     # scroll up -> swipe down , 0.2 -> 0.8
+    #     # scroll down -> swipe up , 0.8 -> 0.2
+    #     # scroll left -> swipe right , 0.2 -> 0.8
+    #     # scroll right -> swipe left , 0.8 -> 0.2
+    #     if direction == 'up':
+    #         start_x, start_y = convert_point_format([ 0.5, 0.2], img_ele, src_format=src_format, tgt_format=tgt_format)
+    #         end_x, end_y = convert_point_format([ 0.5, 0.8], img_ele, src_format=src_format, tgt_format=tgt_format)
+    #     elif direction == 'down':
+    #         start_x, start_y = convert_point_format([ 0.5, 0.8], img_ele, src_format=src_format, tgt_format=tgt_format)
+    #         end_x, end_y = convert_point_format([ 0.5, 0.2], img_ele, src_format=src_format, tgt_format=tgt_format)
+    #     elif direction == 'left':
+    #         start_x, start_y = convert_point_format([ 0.2, 0.5], img_ele, src_format=src_format, tgt_format=tgt_format)
+    #         end_x, end_y = convert_point_format([ 0.8, 0.5], img_ele, src_format=src_format, tgt_format=tgt_format)
+    #     elif direction == 'right':
+    #         start_x, start_y = convert_point_format([ 0.8, 0.5], img_ele, src_format=src_format, tgt_format=tgt_format)
+    #         end_x, end_y = convert_point_format([ 0.2, 0.5], img_ele, src_format=src_format, tgt_format=tgt_format)
+    #     dummy_action_translated['arguments']['coordinate'] = [start_x, start_y]
+    #     dummy_action_translated['arguments']['coordinate2'] = [end_x, end_y]
+        
     elif action_type == json_action.CLICK:
         x, y = arguments['coordinate']
         x, y = convert_point_format([x, y], img_ele, src_format=src_format, tgt_format=tgt_format)

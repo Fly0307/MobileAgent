@@ -3,7 +3,7 @@
 current_time=$(date +"%Y-%m-%d_%H-%M-%S")
 LOG="log_ma3_"$current_time".log"
 
-MODEL_NAME="mobile_agent_v3"
+MODEL_NAME="gui_owl"
 MODEL=""
 API_KEY="dummy_api_key"
 BASE_URL="http://123.60.91.241:9000/v1"

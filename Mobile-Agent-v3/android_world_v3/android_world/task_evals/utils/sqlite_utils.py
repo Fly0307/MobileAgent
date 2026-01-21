@@ -16,8 +16,8 @@
 
 import os
 import sys
-import pysqlite3
-sys.modules["sqlite3"] = pysqlite3
+# import pysqlite3
+# sys.modules["sqlite3"] = pysqlite3
 import sqlite3
 import time
 from typing import Optional, Type

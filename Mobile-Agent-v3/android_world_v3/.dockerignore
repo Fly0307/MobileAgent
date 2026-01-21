@@ -1,0 +1,10 @@
+# 忽略所有 traj-* 目录（无论在何处）
+traj_*/
+
+# 忽略 build 目录
+build/
+
+# 忽略所有日志文件
+*.log
+android_world/agents/experience/BAAI/
+android_world/agents/experience/storage/
