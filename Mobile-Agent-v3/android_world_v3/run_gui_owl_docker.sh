@@ -79,6 +79,8 @@ CMD="$CMD --api_key=\"$API_KEY\""
 CMD="$CMD --base_url=\"$BASE_URL\""
 CMD="$CMD --output_path=\"$TRAJ_OUTPUT_PATH\""
 CMD="$CMD --n_task_combinations=$N_TASK_COMBINATIONS"
+CMD="$CMD --task_seed=$TASK_SEED"
+CMD="$CMD --fixed_task_seed=$FIXED_TASK_SEED"
 CMD="$CMD --use_task_enhancement=$USE_TASK_ENHANCEMENT"
 
 # Add tasks if specified

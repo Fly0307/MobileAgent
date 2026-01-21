@@ -66,6 +66,10 @@ flags.DEFINE_list(
 flags.DEFINE_integer(
     'n_task_combinations', 1, 'Number of combinations per task.'
 )
+flags.DEFINE_integer('task_seed', 42, 'Seed for task suite initialization.')
+flags.DEFINE_boolean(
+    'fixed_task_seed', False, 'Whether to use a fixed task seed.'
+)
 flags.DEFINE_string(
     'output_path', 'traj_docker_output', 'Path to save trajectories.'
 )
@@ -511,8 +515,14 @@ def main(argv):
              print(f"Main client {docker_urls[0]} is unhealthy. Please check env.")
              return
         
-        # Reinitialize suite if needed configuration (optional, skipping for now to use default)
-        # main_client.reinitialize_suite(...) 
+        # Reinitialize suite to apply n_task_combinations
+        if FLAGS.n_task_combinations and FLAGS.n_task_combinations > 0:
+            seed = FLAGS.task_seed if FLAGS.fixed_task_seed else FLAGS.task_seed
+            main_client.reinitialize_suite(
+                n_task_combinations=FLAGS.n_task_combinations,
+                seed=seed,
+                task_family="android_world",
+            )
         
         available_tasks = main_client.get_suite_task_list(max_index=-1)
         print(f"Available tasks in suite: {len(available_tasks)}")
